@@ -5,28 +5,39 @@
 
 using namespace std;
 
-string le_arquivo(const string &file_name);  //Função que lerá o arquivo inicial
+string le_arquivo(const char file_name[]);  //Função que lerá o arquivo inicial
 
-int main () 
+int main(int argc, char const *argv[])
 {
-  string programa = le_arquivo("meu_programa.txt");
-  cout << programa << endl;
+  if(argc < 2)
+  {
+    cout << "Argument not passed !" << endl;
+    return -1;
+  }
+  else
+  {
+    string programa = le_arquivo(argv[1]);
+    if(programa=="ERRO")
+    {
+      return -1;
+    }
+    else
+    {
+      cout << programa << endl;
+    }
+    
+  }
+  
   return 0;
 }
 
-string le_arquivo(const string &file_name)
+string le_arquivo(const char file_name[])
 {
-  //Convertendo a string para char
-  char file_nameAux[file_name.size() + 1];
-  file_name.copy(file_nameAux, file_name.size() + 1);
-  file_nameAux[file_name.size()] = '\0';
-
-  vector<string> line;  //String que lerá o arquivo
   string programa = ""; //String que guarda o programa inteiro em um só elemento
   string lineAux;
 
   
-  ifstream myfile (file_nameAux); 
+  ifstream myfile (file_name); 
 
   if (myfile.is_open())    //Checa se a pasta foi aberta com sucesso
   {
@@ -40,6 +51,6 @@ string le_arquivo(const string &file_name)
     return programa;
   }
 
-  else cout << "Unable to open file"; 
+  else cout << "Unable to open file!\n"; 
   return "ERRO"; //Retorna -1 caso dê errado
 }
