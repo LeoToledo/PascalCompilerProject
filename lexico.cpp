@@ -1,26 +1,34 @@
 #include<iostream>
 #include <fstream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
 int main () {
-  string line[];
-  ifstream myfile ("init_code.txt"); 
+  vector<string> line;  //String que lerá o arquivo
+  vector<string> programa; //String que guarda o programa inteiro em um só elemento
+  string lineAux;
+
+  ifstream myfile ("meu_programa.txt"); 
 
   if (myfile.is_open())    //Checa se a pasta foi aberta com sucesso
   {
-	int i = 0;
     while (! myfile.eof() ) //enquanto end of file for false continua
     {
-    	getline (myfile,line[i]); // como foi aberto em modo texto(padrão)
+    	getline (myfile,lineAux); // como foi aberto em modo texto(padrão)
                              //e não binário(ios::bin) pega cada linha
-		i++;
+		line.push_back(lineAux);
+
+		for(int i = 0; i < line.size(); i++)
+		{
+			programa.push_back(line[i]);
+		}
+		//programa.push_back("/");
     }
-	for(i = 0; i < len(i); i++)
-	{
-		cout << line << endl;
-	}
+	
+	cout << programa[programa.size() - 2] << endl; 
+	
 	
     myfile.close();
   }
