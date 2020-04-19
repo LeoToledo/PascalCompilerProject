@@ -7,7 +7,7 @@ using namespace std;
 
 int main () {
   vector<string> line;  //String que lerá o arquivo
-  vector<string> programa; //String que guarda o programa inteiro em um só elemento
+  string programa = ""; //String que guarda o programa inteiro em um só elemento
   string lineAux;
 
   ifstream myfile ("meu_programa.txt"); 
@@ -18,18 +18,16 @@ int main () {
     {
     	getline (myfile,lineAux); // como foi aberto em modo texto(padrão)
                              //e não binário(ios::bin) pega cada linha
-		line.push_back(lineAux);
-
-		for(int i = 0; i < line.size(); i++)
-		{
-			programa.push_back(line[i]);
-		}
-		//programa.push_back("/");
+		line.push_back(lineAux);	
     }
-	
-	cout << programa[programa.size() - 2] << endl; 
-	
-	
+
+
+	for(int i = 0; i < line.size(); i++) //Concatenando tudo em um único elemento com todo o programa
+	{
+		programa = programa + line[i];
+	}
+	cout << programa << endl;
+
     myfile.close();
   }
 
