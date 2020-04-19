@@ -16,16 +16,10 @@ int main () {
   {
     while (! myfile.eof() ) //enquanto end of file for false continua
     {
-    	getline (myfile,lineAux); // como foi aberto em modo texto(padrão)
-                             //e não binário(ios::bin) pega cada linha
-		line.push_back(lineAux);	
+    	getline (myfile,lineAux); // como foi aberto em modo texto(padrão) e não binário(ios::bin) pega cada linha
+		  programa += lineAux;
     }
 
-
-	for(int i = 0; i < line.size(); i++) //Concatenando tudo em um único elemento com todo o programa
-	{
-		programa = programa + line[i];
-	}
 	cout << programa << endl;
 
     myfile.close();
