@@ -2,8 +2,7 @@
 #include "lexico.h"
 
 using namespace std;
-
-unordered_map<int, vector<string>> symbol_table;
+using namespace lexico;
 
 int main(int argc, char const *argv[])
 {
@@ -14,24 +13,25 @@ int main(int argc, char const *argv[])
     }
     else
     {
-        string programa = le_arquivo(argv[1]);
-        if (programa == "ERRO")
+        LexicoPascalCompiler lexico;
+        lexico.le_programa(argv[1]);
+        if (lexico.programa == "ERRO")
         {
             return -1;
         }
         else
         {
-            cout << programa << endl;
+            cout << lexico.programa << endl;
             cout << "\nTesting Table Hash:" << endl;
             vector<string> simb_program;
             simb_program.push_back("program");
             simb_program.push_back("simb_program");
             cout << "Input : { " << simb_program[0] << ", " << simb_program[1] << " }\n";
-            int key = funcao_hash(simb_program[0]);
+            int key = lexico.funcao_hash(simb_program[0]);
             cout << "Hash Key : " << key << endl;
             cout << "Adding element ..." << endl;
-            symbol_table[key] = simb_program;
-            unordered_map<int, vector<string>>::const_iterator got = symbol_table.find(key);
+            lexico.SetIdentificador(simb_program[0], simb_program[1]);
+            /*
             if (symbol_table.find(key) != symbol_table.end())
             {
                 cout << "Element is present !" << endl;
@@ -41,7 +41,7 @@ int main(int argc, char const *argv[])
             else
             {
                 cout << "Element is not present !";
-            }
+            }*/
         }
     }
 

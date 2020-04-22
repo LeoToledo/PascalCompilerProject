@@ -4,8 +4,23 @@
 #include "lexico.h"
 
 using namespace std;
+using namespace lexico;
 
-string le_arquivo(const char file_name[]) //Função que lerá o arquivo inicial
+int LexicoPascalCompiler::GetIndice()
+{
+  return indice; 
+}
+
+void LexicoPascalCompiler::SetIdentificador(string identificador, string token)
+{
+  vector<string> aux;
+  aux.push_back(identificador);
+  aux.push_back(token);
+  int key = funcao_hash(aux[0]);
+  symbol_table[key] = aux;
+}
+
+void LexicoPascalCompiler::le_programa(const char file_name[]) //Função que lerá o arquivo inicial
 {
   string programa = ""; //String que guarda o programa inteiro em um só elemento
   string lineAux;
@@ -22,14 +37,15 @@ string le_arquivo(const char file_name[]) //Função que lerá o arquivo inicial
     }
 
     myfile.close();
-    return programa;
+    return;
   }
 
   else cout << "Unable to open file!\n"; 
-  return "ERRO"; //Retorna -1 caso dê errado
+  programa = "ERRO";
+  return;
 }
 
-long long funcao_hash(string const& s){ //Função responsável por calcular chave da tabela hash para um string
+long long LexicoPascalCompiler::funcao_hash(string const& s){ //Função responsável por calcular chave da tabela hash para um string
     int p = 13;
     long long m = pow(18, 3);
     long long hash;
@@ -46,13 +62,73 @@ long long funcao_hash(string const& s){ //Função responsável por calcular cha
     return hash;
 }
 
+void LexicoPascalCompiler::insere_hash(const char file_element[], const char file_token[])
+{
+  string lineElem, lineToken; //Guardara cada linha lida do txt
+
+  ifstream felem(file_element), ftoken(file_token); 
+
+  if (felem.is_open() && ftoken.is_open())    //Checa se o txt foi aberto
+  {
+    int key; //recebe a chave hash calculada para cada elemento
+    vector<string> aux; //vetor de string auxiliar para receber o elemento e seu token de cada txt
+    int cont_elem = 0, cont_token = 0;
+    while (!felem.eof() || !ftoken.eof() ) //enquanto end of file for false continua
+    {
+    	getline(felem,lineElem); //Leio linha do txt com simbolos resrvados
+      getline(ftoken,lineToken); //Leio linha do txt com tokens reservados
+		  //cout << "Elemento : " << lineElem << "\t\tToken: " << lineToken << endl;
+      if(lineToken == "" || lineElem == "")
+      {
+        cout << "Erro - Arquivos de elmentos e tokens nao pareados !\nTente novamente" << endl;
+        return;
+      }
+      aux.push_back(lineElem);
+      aux.push_back(lineToken);
+      key = funcao_hash(aux[0]); //Calcula a chave hash do elemento reservado
+      symbol_table[key] = aux; //insere vetor com elemento e token na tabela hash
+    }
+
+    felem.close();
+    ftoken.close();
+  }
+
+  else cout << "Unable to open file!\n"; 
+
+}
+
+void LexicoPascalCompiler::insere_char_values(const char file_chair[])
+{
+  string lineChair; //Guardara cada linha lida do txt
+
+  ifstream fchair(file_chair); 
+
+  if (fchair.is_open())    //Checa se o txt foi aberto
+  {
+    int value = 1; //recebe o valor para cada chave
+    char aux[1];
+    while (!fchair.eof()) //enquanto end of file for false continua
+    {
+    	getline(fchair,lineChair); //Leio linha do txt com simbolos resrvados
+		  //cout << "Elemento : " << lineChair << "\tValue: " << value << endl;
+      lineChair.copy(aux,lineChair.size()+1);
+      char_value[aux[0]] = value;
+      value++;
+    }
+    fchair.close();
+  }
+
+  else cout << "Unable to open file!\n"; 
+
+}
+
 //Checa em qual autômato iremos começar
 //String programa é a string que contém o código inteiro
 //int init_pos é a posição atual na análise
-void checa_automato(string programa, int init_pos)
+int LexicoPascalCompiler::checa_automato()
 {
   //Guarda o valor da tabela ascii do primeiro caractere
-  int valor_ascii = programa[init_pos];
+  int valor_ascii = programa[indice];
 
   //Variável temporária - ignorar
   int automato;
@@ -100,7 +176,8 @@ void checa_automato(string programa, int init_pos)
   //Faixa proibida
   else
   {
-    automato = 8
+    automato = 8;
   }
+  return automato;
 
 }
