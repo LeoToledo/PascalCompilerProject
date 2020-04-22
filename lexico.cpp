@@ -133,8 +133,8 @@ int LexicoPascalCompiler::checa_automato()
   //Variável temporária - ignorar
   int automato;
 
-  //Faixa 65-90: A-Z, Faixa 97-122:a-z
-  if( (valor_ascii >= 65 && valor_ascii <= 90) || (valor_ascii >= 97 && valor_ascii <= 122) )
+  //Faixa 1-26: A-Z, Faixa 27-52:a-z
+  if( (valor_ascii >= 1 && valor_ascii <= 52) )
   {
     automato = 1;
     //Posteriormente, substituiremos a variável automato pela
@@ -142,34 +142,33 @@ int LexicoPascalCompiler::checa_automato()
     //Ex: idenfier_automaton(programa, init_pos)
   }
 
-  //Faixa 48-57: 0-9
-  else if(valor_ascii >= 48 && valor_ascii <= 57)
+  //Faixa 53-62: 0-9
+  else if(valor_ascii >= 53 && valor_ascii <= 62)
   {
     automato = 2;
   }
-  //Faixa 13,32: espaço e enter
-  else if(valor_ascii == 13 || valor_ascii == 32)
+  //Faixa 74,75: espaço e enter
+  else if(valor_ascii == 74 || valor_ascii == 75)
   {
     automato = 3;
   }
-  //Faixa 42,43,45,47,58,60,61,62: *,+,-,/,:,<,=,>
-  else if(valor_ascii == 42 || valor_ascii == 43 || valor_ascii == 45 || valor_ascii == 47
-          || valor_ascii == 58 || valor_ascii == 60 || valor_ascii == 61 || valor_ascii == 62)
+  //Faixa   + 63| - 64| * 65| / 66| : 76| < 68| = 67| > 69
+  else if(valor_ascii >= 63 && valor_ascii <= 69 || valor_ascii == 76)
   {
     automato = 4;
   }
-  //Faixa 123: {
-  else if(valor_ascii == 123)
+  //Faixa 70: {
+  else if(valor_ascii == 70)
   {
     automato = 5;
   }
-  //Faixa 44: ,
-  else if(valor_ascii == 44)
+  //Faixa 78: ,
+  else if(valor_ascii == 78)
   {
     automato = 6;
   }
-  //Faixa 59: ;
-  else if(valor_ascii == 59)
+  //Faixa 79: ;
+  else if(valor_ascii == 79)
   {
     automato = 7;
   }
