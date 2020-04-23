@@ -14,10 +14,11 @@ namespace lexico
             std::unordered_map<int, std::vector<std::string>> symbol_table;
             //Tabela hash que contém os chars com seu respectivo valor organizado
             std::unordered_map<char, int> char_value;
-            //Variável que guarda o indice atual de leitura da string programa
-            int indice = 0;
             
         public:
+            //Variável que guarda o indice atual de leitura da string programa
+            int indice = 0;
+
             //String que guardo o programa lido do txt
             std::string programa ;
 

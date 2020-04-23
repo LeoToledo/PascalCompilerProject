@@ -293,7 +293,6 @@ int LexicoPascalCompiler::indentificador_automaton()
         buffer.push_back(res[0]);
         buffer.push_back(res[1]);
       }
-      
       return 1;
     }
     else
