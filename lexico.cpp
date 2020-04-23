@@ -206,3 +206,59 @@ int LexicoPascalCompiler::checa_automato()
   return automato;
 
 }
+
+int LexicoPascalCompiler::number_automaton(std::string prog, int current_pos)
+{
+  int i = 0;
+  int n = 0;
+  //Buffer que vai guardando a expressão que está sendo formada
+  vector<char> buffer;
+
+  //Percorre até chegar no final do programa
+  while(current_pos != (prog.size()-1) )
+  {
+    //Se for um digito
+    if(prog[current_pos] >= 53 && prog[current_pos] <= 62)
+    {
+      //Adiciona o dígito atual no buffer
+      buffer.push_back(prog[current_pos]);
+      current_pos++;
+    }
+    //Caso o número seja inteiro
+    //+ - * / = < > space enter
+    else if(prog[current_pos] >= 63 && prog[current_pos] <= 69 || prog[current_pos] == 74 || prog[current_pos] == 75)
+    {
+      break;
+    }
+    //Caso seja um número com vírgula
+    else if(prog[current_pos] == 78)
+    {
+      buffer.push_back(prog[current_pos]);
+      current_pos++;
+      //Continua checando por números depois da vírgula
+      if(prog[current_pos] >= 53 && prog[current_pos] <= 62)
+      {
+        //Adiciona o dígito atual no buffer
+        buffer.push_back(prog[current_pos]);
+        current_pos++;
+      }
+      //Caso o número seja inteiro
+      //+ - * / = < > space enter
+      else if(prog[current_pos] >= 63 && prog[current_pos] <= 69 || prog[current_pos] == 74 || prog[current_pos] == 75)
+      {
+        break;
+      }
+      //Caso tenha um erro depois da vírgula
+      else
+      {
+        return -3;
+      }
+    }
+    //Caso tenha um erro no número inteiro
+    else
+    {
+      return -2;
+    }
+  }
+  return current_pos;
+}

@@ -52,6 +52,9 @@ namespace lexico
             //Método que checa qual automato deve ser utilizado de acordo com o indice atual de leitura
             //do programa
             int checa_automato();
+            //Método do autômato que reconhece números
+            int number_automaton(std::string prog, int current_pos);
+
 
     };
 }
