@@ -31,17 +31,17 @@ int main(int argc, char const *argv[])
             cout << "Hash Key : " << key << endl;
             cout << "Adding element ..." << endl;
             lexico.SetIdentificador(simb_program[0], simb_program[1]);
-            /*
-            if (symbol_table.find(key) != symbol_table.end())
+            lexico.insere_hash("simbolos_reservados.txt", "tokens_reservados.txt");
+            vector<string> aux = lexico.GetIdentificador("for");
+            if (aux[0] != "ERRO")
             {
                 cout << "Element is present !" << endl;
-                vector<string> aux = symbol_table.at(key);
                 cout << "Element : { " << aux[0] << ", " << aux[1] << " }";
             }
             else
             {
                 cout << "Element is not present !";
-            }*/
+            }
         }
     }
 

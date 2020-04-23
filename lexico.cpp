@@ -11,6 +11,20 @@ int LexicoPascalCompiler::GetIndice()
   return indice; 
 }
 
+std::vector<std::string> LexicoPascalCompiler::GetIdentificador(std::string identificador)
+{
+  vector<string> aux;
+  int key = funcao_hash(identificador);
+  if(symbol_table.find(key) != symbol_table.end())
+  {
+    aux = symbol_table.at(key);
+    return aux;
+  }
+  aux.push_back("ERRO");
+  return aux;
+  
+}
+
 void LexicoPascalCompiler::SetIdentificador(string identificador, string token)
 {
   vector<string> aux;
@@ -18,6 +32,18 @@ void LexicoPascalCompiler::SetIdentificador(string identificador, string token)
   aux.push_back(token);
   int key = funcao_hash(aux[0]);
   symbol_table[key] = aux;
+}
+
+int LexicoPascalCompiler::GetChar(char c)
+{
+  int value;
+  if(char_value.find(c) != char_value.end())
+  {
+    value = char_value.at(c);
+    return value;
+  }
+  value = -1; //Elemento nao existe 
+  return value;
 }
 
 void LexicoPascalCompiler::le_programa(const char file_name[]) //Função que lerá o arquivo inicial
@@ -48,12 +74,11 @@ void LexicoPascalCompiler::le_programa(const char file_name[]) //Função que le
 long long LexicoPascalCompiler::funcao_hash(string const& s){ //Função responsável por calcular chave da tabela hash para um string
     int p = 13;
     long long m = pow(18, 3);
-    long long hash;
-
+    long long hash = 0;
 
     for(int i = 0; i < s.size() ; i++){
         //cout << int(s[i]) << " ";
-        hash = s[i]*pow(p, i);
+        hash += s[i]*pow(p, i);
         
 
     }
@@ -72,7 +97,7 @@ void LexicoPascalCompiler::insere_hash(const char file_element[], const char fil
   {
     int key; //recebe a chave hash calculada para cada elemento
     vector<string> aux; //vetor de string auxiliar para receber o elemento e seu token de cada txt
-    int cont_elem = 0, cont_token = 0;
+    int cont = 0;
     while (!felem.eof() || !ftoken.eof() ) //enquanto end of file for false continua
     {
     	getline(felem,lineElem); //Leio linha do txt com simbolos resrvados
@@ -87,6 +112,7 @@ void LexicoPascalCompiler::insere_hash(const char file_element[], const char fil
       aux.push_back(lineToken);
       key = funcao_hash(aux[0]); //Calcula a chave hash do elemento reservado
       symbol_table[key] = aux; //insere vetor com elemento e token na tabela hash
+      aux.clear();
     }
 
     felem.close();
