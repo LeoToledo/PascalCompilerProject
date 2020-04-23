@@ -1,6 +1,7 @@
 #include <iostream>
 #include "lexico.h"
 
+
 using namespace std;
 using namespace lexico;
 
@@ -14,12 +15,13 @@ int main(int argc, char const *argv[])
     else
     {
         LexicoPascalCompiler lexico;
+    
         lexico.le_programa(argv[1]);
         if (lexico.programa == "ERRO")
         {
             return -1;
         }
-        else
+       /* else
         {
             cout << lexico.programa << endl;
             cout << "\nTesting Table Hash:" << endl;
@@ -43,6 +45,13 @@ int main(int argc, char const *argv[])
                 cout << "Element is not present !";
             }
         }
+        */
+        else
+        {
+            //cout << lexico.programa << endl;
+            lexico.number_automaton(lexico.programa, lexico.indice);
+        }
+        
     }
 
     return 0;

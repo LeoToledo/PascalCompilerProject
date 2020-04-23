@@ -48,7 +48,8 @@ int LexicoPascalCompiler::GetChar(char c)
 
 void LexicoPascalCompiler::le_programa(const char file_name[]) //Função que lerá o arquivo inicial
 {
-  string programa = ""; //String que guarda o programa inteiro em um só elemento
+  //string programa = ""; //String que guarda o programa inteiro em um só elemento
+
   string lineAux;
 
   
@@ -59,7 +60,7 @@ void LexicoPascalCompiler::le_programa(const char file_name[]) //Função que le
     while (! myfile.eof() ) //enquanto end of file for false continua
     {
     	getline (myfile,lineAux); // como foi aberto em modo texto(padrão) e não binário(ios::bin) pega cada linha
-		  programa += lineAux;
+		  LexicoPascalCompiler::programa += lineAux;
     }
 
     myfile.close();
@@ -209,34 +210,33 @@ int LexicoPascalCompiler::checa_automato()
 
 int LexicoPascalCompiler::number_automaton(std::string prog, int current_pos)
 {
-  int i = 0;
-  int n = 0;
   //Buffer que vai guardando a expressão que está sendo formada
   vector<char> buffer;
 
   //Percorre até chegar no final do programa
   while(current_pos != (prog.size()-1) )
-  {
+  { cout << LexicoPascalCompiler::GetChar(prog[current_pos];
     //Se for um digito
-    if(prog[current_pos] >= 53 && prog[current_pos] <= 62)
+    if(LexicoPascalCompiler::GetChar(prog[current_pos]) >= 53 && LexicoPascalCompiler::GetChar(prog[current_pos]) <= 62)
     {
       //Adiciona o dígito atual no buffer
       buffer.push_back(prog[current_pos]);
       current_pos++;
     }
-    //Caso o número seja inteiro
+    //Caso o número seja inteiro e tenha terminado
     //+ - * / = < > space enter
-    else if(prog[current_pos] >= 63 && prog[current_pos] <= 69 || prog[current_pos] == 74 || prog[current_pos] == 75)
+    else if(LexicoPascalCompiler::GetChar(prog[current_pos]) >= 63 && LexicoPascalCompiler::GetChar(prog[current_pos]) <= 69 || 
+            LexicoPascalCompiler::GetChar(prog[current_pos]) || LexicoPascalCompiler::GetChar(prog[current_pos]))
     {
       break;
     }
     //Caso seja um número com vírgula
-    else if(prog[current_pos] == 78)
+    else if(LexicoPascalCompiler::GetChar(prog[current_pos]) == 78)
     {
       buffer.push_back(prog[current_pos]);
       current_pos++;
       //Continua checando por números depois da vírgula
-      if(prog[current_pos] >= 53 && prog[current_pos] <= 62)
+      if(LexicoPascalCompiler::GetChar(prog[current_pos]) >= 53 && LexicoPascalCompiler::GetChar(prog[current_pos]) <= 62)
       {
         //Adiciona o dígito atual no buffer
         buffer.push_back(prog[current_pos]);
@@ -244,7 +244,8 @@ int LexicoPascalCompiler::number_automaton(std::string prog, int current_pos)
       }
       //Caso o número seja inteiro
       //+ - * / = < > space enter
-      else if(prog[current_pos] >= 63 && prog[current_pos] <= 69 || prog[current_pos] == 74 || prog[current_pos] == 75)
+      else if(LexicoPascalCompiler::GetChar(prog[current_pos]) >= 63 && LexicoPascalCompiler::GetChar(prog[current_pos]) <= 69 || 
+              LexicoPascalCompiler::GetChar(prog[current_pos]) == 74 || LexicoPascalCompiler::GetChar(prog[current_pos]) == 75)
       {
         break;
       }
@@ -260,5 +261,12 @@ int LexicoPascalCompiler::number_automaton(std::string prog, int current_pos)
       return -2;
     }
   }
+
+  //Printando
+  for(int i = 0; i < buffer.size(); i++)
+  {
+    cout <<buffer[i];
+  }
+  
   return current_pos;
 }
