@@ -15,10 +15,14 @@ namespace lexico
             //Tabela hash que contém os chars com seu respectivo valor organizado
             std::unordered_map<char, int> char_value;
             //Variável que guarda o indice atual de leitura da string programa
-            int indice;
+            int indice = 0;
+            
         public:
             //String que guardo o programa lido do txt
             std::string programa ;
+
+            //Buffer que guarda os elementos ja identificados com seus tokens
+            std::vector<std::string> buffer;
 
             //Retorna o indice atual de leitura do programa
             int GetIndice();
@@ -53,7 +57,9 @@ namespace lexico
             //do programa
             int checa_automato();
             //Método do autômato que reconhece números
-            int number_automaton(std::string prog, int current_pos);
+            int number_automaton();
+            //Método do autômato que reconhece identificadores
+            int indentificador_automaton();
 
 
     };

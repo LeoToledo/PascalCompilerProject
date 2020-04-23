@@ -22,26 +22,14 @@ int main(int argc, char const *argv[])
         else
         {
             cout << lexico.programa << endl;
-            cout << "\nTesting Table Hash:" << endl;
-            vector<string> simb_program;
-            simb_program.push_back("program");
-            simb_program.push_back("simb_program");
-            cout << "Input : { " << simb_program[0] << ", " << simb_program[1] << " }\n";
-            int key = lexico.funcao_hash(simb_program[0]);
-            cout << "Hash Key : " << key << endl;
-            cout << "Adding element ..." << endl;
-            lexico.SetIdentificador(simb_program[0], simb_program[1]);
-            lexico.insere_hash("simbolos_reservados.txt", "tokens_reservados.txt");
-            vector<string> aux = lexico.GetIdentificador("for");
-            if (aux[0] != "ERRO")
+            lexico.insere_hash("simbolos_reservados.txt","tokens_reservados.txt");
+            lexico.insere_char_values("chars.txt");
+            lexico.checa_automato();
+            for (int i = 0; i < lexico.buffer.size(); i+=2)
             {
-                cout << "Element is present !" << endl;
-                cout << "Element : { " << aux[0] << ", " << aux[1] << " }";
+                cout << "\n" << lexico.buffer[i] << ", " << lexico.buffer[i+1];
             }
-            else
-            {
-                cout << "Element is not present !";
-            }
+            cout << endl;
         }
     }
 
