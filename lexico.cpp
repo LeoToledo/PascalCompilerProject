@@ -157,10 +157,10 @@ int LexicoPascalCompiler::checa_automato()
 {
   //Guarda o valor da tabela ascii do primeiro caractere
   int valor_ascii = GetChar(programa[indice]);
-
+  cout << valor_ascii << endl;
   //Autômato de espaços e enters
   if(valor_ascii == 74 || valor_ascii == 75)
-  {
+  { 
     this->indice += 1;
   }
 
@@ -179,12 +179,7 @@ int LexicoPascalCompiler::checa_automato()
     number_automaton();
     return 1;
   }
-  //Faixa 74,75: espaço e enter
-  else if (valor_ascii == 74 || valor_ascii == 75)
-  {
-    automato = 3;
-    return 1;
-  }
+  
   //Faixa   + 63| - 64| * 65| / 66| : 76| < 68| = 67| > 69
   else if (valor_ascii >= 63 && valor_ascii <= 69 || valor_ascii == 76)
   {
@@ -257,6 +252,7 @@ int LexicoPascalCompiler::indentificador_automaton()
   }
 }
 
+
 int LexicoPascalCompiler::number_automaton()
 {
   //Define um vetor de chars para guardar a sentença sendo formada
@@ -315,6 +311,10 @@ int LexicoPascalCompiler::number_automaton()
 
   //Passando do buffer_aux para o buffer do objeto
   buffer.push_back(buffer_aux);
+  for(int i = 0; i < buffer.size(); i++)
+  {
+    cout << buffer[i] << endl;  
+  }
 
   return 1;
 }

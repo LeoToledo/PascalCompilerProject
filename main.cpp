@@ -26,17 +26,18 @@ int main(int argc, char const *argv[])
             lexico.insere_hash("simbolos_reservados.txt","tokens_reservados.txt");
             lexico.insere_char_values("chars.txt");
 
-            for(int j = 0; j < 20; j++)
+            for(int j = 0; j < 5; j++)
             {
                 lexico.checa_automato();
                 
-            }   
+            }
+            /*   
             for (int i = 0; i < lexico.buffer.size(); i+=1)
             {
                 cout << "\n" << lexico.buffer[i]; " ";
             }
             cout << "\n" << endl;        
-
+            */
         }
     } 
     return 0;
