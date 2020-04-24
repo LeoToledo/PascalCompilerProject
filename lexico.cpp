@@ -158,111 +158,64 @@ int LexicoPascalCompiler::checa_automato()
   //Guarda o valor da tabela ascii do primeiro caractere
   int valor_ascii = GetChar(programa[indice]);
 
+  //Autômato de espaços e enters
+  if(valor_ascii == 74 || valor_ascii == 75)
+  {
+    this->indice += 1;
+  }
+
   //Variável temporária - ignorar
   int automato;
   
   //Faixa 1-26: A-Z, Faixa 27-52:a-z
   if ((valor_ascii >= 1 && valor_ascii <= 52))
   {
-    automato = 1;
     indentificador_automaton();
-    //Posteriormente, substituiremos a variável automato pela
-    //Chamada da função do automato que será utilizado
-    //Ex: idenfier_automaton(programa, init_pos)
+    return 1;
   }
-
   //Faixa 53-62: 0-9
   else if (valor_ascii >= 53 && valor_ascii <= 62)
   {
-    automato = 2;
+    number_automaton();
+    return 1;
   }
   //Faixa 74,75: espaço e enter
   else if (valor_ascii == 74 || valor_ascii == 75)
   {
     automato = 3;
+    return 1;
   }
   //Faixa   + 63| - 64| * 65| / 66| : 76| < 68| = 67| > 69
   else if (valor_ascii >= 63 && valor_ascii <= 69 || valor_ascii == 76)
   {
     automato = 4;
+    return 1;
   }
   //Faixa 70: {
   else if (valor_ascii == 70)
   {
     automato = 5;
+    return 1;
   }
   //Faixa 78: ,
   else if (valor_ascii == 78)
   {
     automato = 6;
+    return 1;
   }
   //Faixa 79: ;
   else if (valor_ascii == 79)
   {
     automato = 7;
+    return 1;
   }
   //Faixa proibida
   else
   {
     automato = 8;
+    return -1;
   }
-  return automato;
-}
 
-int LexicoPascalCompiler::number_automaton()
-{
-  int i = 0;
-  int n = 0;
-  //Buffer que vai guardando a expressão que está sendo formada
-  vector<char> buffer;
-
-  //Percorre até chegar no final do programa
-  while (indice < (programa.size() - 1))
-  {
-    //Se for um digito
-    if (programa[indice] >= 53 && programa[indice] <= 62)
-    {
-      //Adiciona o dígito atual no buffer
-      buffer.push_back(programa[indice]);
-      indice++;
-    }
-    //Caso o número seja inteiro
-    //+ - * / = < > space enter
-    else if (programa[indice] >= 63 && programa[indice] <= 69 || programa[indice] == 74 || programa[indice] == 75)
-    {
-      break;
-    }
-    //Caso seja um número com vírgula
-    else if (programa[indice] == 78)
-    {
-      buffer.push_back(programa[indice]);
-      indice++;
-      //Continua checando por números depois da vírgula
-      if (programa[indice] >= 53 && programa[indice] <= 62)
-      {
-        //Adiciona o dígito atual no buffer
-        buffer.push_back(programa[indice]);
-        indice++;
-      }
-      //Caso o número seja inteiro
-      //+ - * / = < > space enter
-      else if (programa[indice] >= 63 && programa[indice] <= 69 || programa[indice] == 74 || programa[indice] == 75)
-      {
-        break;
-      }
-      //Caso tenha um erro depois da vírgula
-      else
-      {
-        return -3;
-      }
-    }
-    //Caso tenha um erro no número inteiro
-    else
-    {
-      return -2;
-    }
-  }
-  return indice;
 }
 
 int LexicoPascalCompiler::indentificador_automaton()
@@ -303,3 +256,66 @@ int LexicoPascalCompiler::indentificador_automaton()
     }
   }
 }
+
+int LexicoPascalCompiler::number_automaton()
+{
+  //Define um vetor de chars para guardar a sentença sendo formada
+  string buffer_aux="";
+  
+  //Percorre até chegar no final do programa
+  while(indice != (programa.size()) )
+  { 
+    //Se for um digito
+    if(GetChar(programa[indice]) >= 53 && GetChar(programa[indice]) <= 62)
+    {
+      //Adiciona o dígito atual no buffer
+      buffer_aux += programa[indice];
+      this->indice++;
+    } 
+    //Caso o número seja inteiro e tenha terminado
+    //+ - * / = < > space enter
+    else if(GetChar(programa[indice]) >= 63 && GetChar(programa[indice]) <= 69 ||
+            GetChar(programa[indice]) == 74 || GetChar(programa[indice]) == 75)
+    {
+      break;
+    }
+    //Caso seja um número com vírgula
+    else if(GetChar(programa[indice]) == 78)
+    {
+      buffer_aux += programa[indice];
+      this->indice++;
+      //Continua checando por números depois da vírgula
+      if(GetChar(programa[indice]) >= 53 && GetChar(programa[indice]) <= 62)
+      {
+        //Adiciona o dígito atual no buffer
+        buffer_aux += programa[indice];
+        this->indice++;
+      }
+      //Caso o número seja inteiro
+      //+ - * / = < > space enter
+      else if(GetChar(programa[indice]) >= 63 && GetChar(programa[indice]) <= 69 || 
+              GetChar(programa[indice]) == 74 || GetChar(programa[indice]) == 75)
+      {
+        break;
+      }
+      //Caso tenha um erro depois da vírgula
+      else
+      {
+        cout << "NUMERO ESCRITO INCORRETAMENTE 2" << endl;
+        return -4;
+      }
+    }
+    //Caso tenha um erro no número inteiro
+    else
+    {
+      cout << "NUMERO ESCRITO INCORRETAMENTE 1" << endl;
+      return -3;
+    }
+  }
+
+  //Passando do buffer_aux para o buffer do objeto
+  buffer.push_back(buffer_aux);
+
+  return 1;
+}
+

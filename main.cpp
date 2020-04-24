@@ -11,6 +11,7 @@ int main(int argc, char const *argv[])
         cout << "Argument not passed !" << endl;
         return -1;
     }
+    
     else
     {
         LexicoPascalCompiler lexico;
@@ -21,17 +22,22 @@ int main(int argc, char const *argv[])
         }
         else
         {
-            cout << lexico.programa << endl;
+            //cout << lexico.programa << endl;
             lexico.insere_hash("simbolos_reservados.txt","tokens_reservados.txt");
             lexico.insere_char_values("chars.txt");
-            lexico.checa_automato();
-            for (int i = 0; i < lexico.buffer.size(); i+=2)
-            {
-                cout << "\n" << lexico.buffer[i] << ", " << lexico.buffer[i+1];
-            }
-            cout << endl;
-        }
-    }
 
+            for(int j = 0; j < 20; j++)
+            {
+                lexico.checa_automato();
+                
+            }   
+            for (int i = 0; i < lexico.buffer.size(); i+=1)
+            {
+                cout << "\n" << lexico.buffer[i]; " ";
+            }
+            cout << "\n" << endl;        
+
+        }
+    } 
     return 0;
 }
