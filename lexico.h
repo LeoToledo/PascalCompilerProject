@@ -22,8 +22,11 @@ namespace lexico
             //String que guardo o programa lido do txt
             std::string programa ;
 
-            //Buffer que guarda os elementos ja identificados com seus tokens
-            std::vector<std::string> buffer;
+            //Buffer que guarda os elementos ja identificados
+            std::vector<std::string> buffer_id;
+
+            //Buffer que guarda os tokens dos elementos identificados
+            std::vector<std::string> buffer_token;
 
             //Retorna o indice atual de leitura do programa
             int GetIndice();
@@ -61,6 +64,8 @@ namespace lexico
             int number_automaton();
             //Método do autômato que reconhece identificadores
             int indentificador_automaton();
+            //Método do autônoma de ;
+            int pont_virg_automaton();
 
 
     };
