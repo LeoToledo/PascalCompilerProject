@@ -1,2 +1,2 @@
 program p;
-var x
+var x	aas

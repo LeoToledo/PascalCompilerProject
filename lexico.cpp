@@ -137,12 +137,16 @@ void LexicoPascalCompiler::insere_char_values(const char file_chair[])
     while (!fchair.eof()) //enquanto end of file for false continua
     {
       getline(fchair, lineChair); //Leio linha do txt com simbolos resrvados
-      if(lineChair=="")
+      if(lineChair=="enter")
       {
         lineChair = "\n";
       }
-      //cout << lineChair << endl;
+      if(lineChair=="tab")
+      {
+        lineChair = "\t";
+      }
       char_value[lineChair[0]] = value;
+      //cout << value << " " << lineChair << endl;
       value++;
     }
     fchair.close();
@@ -163,8 +167,8 @@ int LexicoPascalCompiler::checa_automato()
   //Variável temporária - ignorar
   int automato = 0;
 
-  //Autômato de espaços e enters
-  if(valor_ascii == 74 || valor_ascii == 75)
+  //Autômato de tabs, espaços e enters
+  if(valor_ascii >= 74 && valor_ascii <= 76)
   {
     this->indice++;
   }
@@ -191,7 +195,7 @@ int LexicoPascalCompiler::checa_automato()
     automato = 3;
   }
   //Faixa   + 63| - 64| * 65| / 66| : 76| < 68| = 67| > 69
-  else if (valor_ascii >= 63 && valor_ascii <= 69 || valor_ascii == 76)
+  else if (valor_ascii >= 63 && valor_ascii <= 69 || valor_ascii == 77)
   {
     automato = 4;
   }
@@ -201,12 +205,12 @@ int LexicoPascalCompiler::checa_automato()
     automato = 5;
   }
   //Faixa 78: ,
-  else if (valor_ascii == 78)
+  else if (valor_ascii == 79)
   {
     automato = 6;
   }
   //Faixa 79: ;
-  else if (valor_ascii == 79)
+  else if (valor_ascii == 80)
   {
     pont_virg_automaton();
     automato = 7;
@@ -237,13 +241,13 @@ int LexicoPascalCompiler::number_automaton()
     } 
     //Caso o número seja inteiro e tenha terminado
     //+ - * / = < > space enter
-    else if(GetChar(programa[indice]) >= 63 && GetChar(programa[indice]) <= 69 ||
-            GetChar(programa[indice]) == 74 || GetChar(programa[indice]) == 75)
+    else if((GetChar(programa[indice]) >= 63 && GetChar(programa[indice]) <= 69) ||
+            (GetChar(programa[indice]) >= 74 && GetChar(programa[indice]) <= 76))
     {
       break;
     }
     //Caso seja um número com vírgula
-    else if(GetChar(programa[indice]) == 78)
+    else if(GetChar(programa[indice]) == 79)
     {
       buffer_aux += programa[indice];
       this->indice++;
@@ -256,8 +260,8 @@ int LexicoPascalCompiler::number_automaton()
       }
       //Caso o número seja inteiro
       //+ - * / = < > space enter
-      else if(GetChar(programa[indice]) >= 63 && GetChar(programa[indice]) <= 69 || 
-              GetChar(programa[indice]) == 74 || GetChar(programa[indice]) == 75)
+      else if((GetChar(programa[indice]) >= 63 && GetChar(programa[indice]) <= 69) ||
+            (GetChar(programa[indice]) >= 74 && GetChar(programa[indice]) <= 76))
       {
         break;
       }
@@ -296,7 +300,7 @@ int LexicoPascalCompiler::indentificador_automaton()
       aux_string += programa[indice]; //salva as letras do identificador no auxiliar
       this->indice++;
     }
-    else if (aux >= 63 && aux <= 79)
+    else if (aux >= 63 && aux <= 80)
     { //se o char na posição n for um caractere reservado
       vector<string> res;
       res = GetIdentificador(aux_string);
@@ -325,7 +329,7 @@ int LexicoPascalCompiler::pont_virg_automaton()
 {
   this->indice++;
   int aux = GetChar(programa[indice]);
-  if( aux >= 74 && aux <= 75)
+  if( aux >= 74 && aux <= 76)
   {
     string aux_string = "";
     int aux;
