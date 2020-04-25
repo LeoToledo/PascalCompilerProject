@@ -18,9 +18,7 @@ namespace lexico
         public:
             //Variável que guarda o indice atual de leitura da string programa
             int indice = 0;
-            
-            //Variável que diz a linha atual que se está analisando 
-            int linha_atual = 1;
+
             //String que guardo o programa lido do txt
             std::string programa ;
 
@@ -29,6 +27,9 @@ namespace lexico
 
             //Buffer que guarda os tokens dos elementos identificados
             std::vector<std::string> buffer_token;
+
+            //Variavel que e true se tiver parenteses abertos
+            bool parenteses_bool = false;
 
             //Retorna o indice atual de leitura do programa
             int GetIndice();
@@ -68,6 +69,12 @@ namespace lexico
             int indentificador_automaton();
             //Método do autônoma de ;
             int pont_virg_automaton();
+            //Método do autônomo de simbolos proibidos
+            int proibido_automaton();
+            //Método autômato para sinais 
+            int sinal_automaton();
+            //Método autômato para parênteses
+            int parentese_automaton();
 
 
     };
