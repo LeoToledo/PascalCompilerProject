@@ -65,7 +65,7 @@ namespace lexico
 
             //Método que checa qual automato deve ser utilizado de acordo com o indice atual de leitura
             //do programa
-            int checa_automato();
+            void checa_automato();
             //Método do autômato que reconhece números
             int number_automaton();
             //Método do autômato que reconhece identificadores

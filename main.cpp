@@ -1,5 +1,7 @@
 #include <iostream>
 #include "lexico.h"
+#include <fstream>
+#include <string>
 
 using namespace std;
 using namespace lexico;
@@ -42,9 +44,18 @@ int main(int argc, char const *argv[])
                     cout << "Erro - Parenteses aberto !";
             for (int i = 0; i < lexico.buffer_id.size(); i++)
             {
+                
                 cout << "\n" << lexico.buffer_id[i] << ", " << lexico.buffer_token[i];
             }
             cout << endl;
+
+            //Escrevendo no arquivo
+            ofstream outputFile;
+            outputFile.open("output.txt");
+            for(int i = 0; i < lexico.buffer_id.size(); i++)
+            {
+                outputFile << lexico.buffer_id[i] << ", " << lexico.buffer_token[i] << endl;
+            }
         }
     }
 
