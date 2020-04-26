@@ -19,6 +19,9 @@ namespace lexico
             //Variável que guarda o indice atual de leitura da string programa
             int indice = 0;
 
+            //Variável que diz a linha atual que se está analisando 
+            int linha_atual = 1;
+
             //String que guardo o programa lido do txt
             std::string programa ;
 
@@ -75,6 +78,8 @@ namespace lexico
             int sinal_automaton();
             //Método autômato para parênteses
             int parentese_automaton();
+            //Método para autômato de comentário
+            int comentario_automaton();
 
 
     };

@@ -1,7 +1,10 @@
 program p;
-var x@: real;
+var x@: real;{COMENTARIO}
 begin
-	x:=1;
-	while(x<3) do
-		x:=x+1;
+	x:=1!;
+	while(x<3) do 
+{CACETADA!123}
+	
+		x:=x+1;LEO
+$
 end.
