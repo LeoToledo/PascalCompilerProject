@@ -1,11 +1,11 @@
 program p;
-var x@: real;{COMENTARIO 1!}
+var x: real;{COMENTARIO 1!}
 begin
-	x:=1!;
+	x:=1;
 	while(x<3) do 
 {COMENTARIO 2}
 	
 		x:=x+1;
-$
+
 end.
 
