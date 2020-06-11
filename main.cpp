@@ -53,7 +53,7 @@ int main(int argc, char const *argv[])
                 if(lexico.buffer_id.size() != size_anterior)
                 {
                     simbolo.push_back(lexico.buffer_token[i]);
-                    cout << lexico.buffer_token[i] << endl;
+                    //cout << lexico.buffer_token[i] << endl;
                     i++;
                 } 
             }

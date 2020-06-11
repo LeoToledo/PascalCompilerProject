@@ -45,12 +45,14 @@ void SintaticoPascalCompiler::procedimento_programa(string symbol)
     {
         symbol = get_next_simb();
         if (symbol == "ident")
-        {
+        {   
             symbol = get_next_simb();
             if (symbol == ";")
-            {
+            {   
                 symbol = get_next_simb();
+
                 procedimento_corpo(symbol);
+                
                 symbol = get_next_simb();
                 if (symbol == ".")
                 {
@@ -80,10 +82,10 @@ void SintaticoPascalCompiler::procedimento_programa(string symbol)
 
 //2. <corpo> ::= <dc> begin <comandos> end
 void SintaticoPascalCompiler::procedimento_corpo(string symbol)
-{
+{   
     procedimento_dc(symbol);
     if (symbol == "begin")
-    {
+    {   
         symbol = get_next_simb();
         procedimento_comandos(symbol);
         symbol = get_next_simb();
@@ -105,15 +107,16 @@ void SintaticoPascalCompiler::procedimento_corpo(string symbol)
 //3. <dc> ::= <dc_c> <dc_v> <dc_p>
 void SintaticoPascalCompiler::procedimento_dc(string symbol)
 {
-    if(symbol == "const")
-    {
-        procedimento_dc_c(symbol);
-    }
+    procedimento_dc_c(symbol);
+    //symbol = get_next_simb();
+    procedimento_dc_v(symbol);
+    //symbol = get_next_simb();
+    procedimento_dc_p(symbol);
 }
 
 //4. <dc_c> ::= const ident = <numero> ; <dc_c> | λ
 void SintaticoPascalCompiler::procedimento_dc_c(string symbol)
-{
+{   
     if (symbol == "const")
     {
         symbol = get_next_simb();
@@ -153,7 +156,7 @@ void SintaticoPascalCompiler::procedimento_dc_c(string symbol)
         }
     }
     else
-    {
+    {  
         return; //se não for const só sai da função (lambda)
     }
 }
@@ -165,7 +168,7 @@ void SintaticoPascalCompiler::procedimento_dc_v(string symbol)
     {
         symbol = get_next_simb();
         procedimento_variaveis(symbol);
-        symbol = get_next_simb();
+        cout <<"AQUII " << symbol << endl;
         if (symbol == ":")
         {
             symbol = get_next_simb();
@@ -265,6 +268,7 @@ void SintaticoPascalCompiler::procedimento_variaveis(string symbol)
     if (symbol == "ident")
     {
         symbol = get_next_simb();
+        
         if (symbol == ",")
         {
             symbol = get_next_simb();
@@ -278,12 +282,12 @@ void SintaticoPascalCompiler::procedimento_variaveis(string symbol)
             }
         }
         else
-        {
+        {   cout <<"AQUII AOBA " <<symbol << endl;
             return; //se não for vírgula só sai da função (lambda)
         }
     }
     else
-    {
+    {   
         cout << "ERRO - não é igual a ident";
     }
 }
