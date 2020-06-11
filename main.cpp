@@ -37,7 +37,6 @@ int main(int argc, char const *argv[])
             while (lexico.indice < lexico.programa.size())
             {   
                 lexico.checa_automato();
-                
             }
             
             if(lexico.parenteses_bool)

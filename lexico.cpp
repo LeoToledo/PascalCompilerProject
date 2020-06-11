@@ -145,6 +145,10 @@ void LexicoPascalCompiler::insere_char_values(const char file_chair[])
       {
         lineChair = "\t";
       }
+      if(lineChair == "cr")
+      {
+        lineChair = "\r";
+      }
       char_value[lineChair[0]] = value;
       //cout << value << " " << lineChair << endl;
       value++;
@@ -163,10 +167,11 @@ void LexicoPascalCompiler::checa_automato()
 {
   //Guarda o valor da tabela ascii do primeiro caractere
   int valor_ascii = GetChar(programa[indice]);
-  //cout << "asci: " << valor_ascii << " char: " << programa[indice] << endl;
+  int real_val_asci = programa[indice];
+  //cout << "asci: " << valor_ascii << " real asci: " << real_val_asci << " char: " << programa[indice] << endl;
 
   //Autômato de tabs, espaços e enters
-  if(valor_ascii >= 74 && valor_ascii <= 76)
+  if((valor_ascii >= 74 && valor_ascii <= 76) || valor_ascii == 81) 
   {
     if(valor_ascii == 75)
     {
@@ -220,42 +225,51 @@ void LexicoPascalCompiler::checa_automato()
 int LexicoPascalCompiler::number_automaton()
 {
   //Define um vetor de chars para guardar a sentença sendo formada
-  string buffer_aux="";
-  
+  string buffer_aux = "";
+  string real_aux = "";
+  bool real = false;
   //Percorre até chegar no final do programa
   while(indice != (programa.size()) )
   { 
     //Se for um digito
-    if(GetChar(programa[indice]) >= 53 && GetChar(programa[indice]) <= 62)
+    if(GetChar(programa[indice]) >= 53 && GetChar(programa[indice]) <= 62 && !real)
     { 
       //Adiciona o dígito atual no buffer
       buffer_aux += programa[indice];
       this->indice++;
     } 
     //Caso o número seja inteiro e tenha terminado
-    //+ - * / = < > space enter
-    else if(GetChar(programa[indice]) >= 63 && GetChar(programa[indice]) <= 69 || GetChar(programa[indice]) >= 72 && GetChar(programa[indice] <= 78))
+    //+ - * / = < > { } ( ) space enter tab : . ; (nada)
+    else if( ( GetChar(programa[indice]) >= 63 && GetChar(programa[indice]) <= 78 ) || ( GetChar(programa[indice]) >= 80 && GetChar(programa[indice]) <= 81 ) )
     { 
+      if(real_aux.size() > 37)
+        {
+          string aux = "ERRO: ""Numero com casas decimais excedentes na linha " + to_string(linha_atual);
+          this->buffer_id.push_back(aux);
+          this->buffer_token.push_back("Erro_Lexico");
+          return -2;
+        }
       break;
     }
     //Caso seja um número com vírgula
     else if(GetChar(programa[indice]) == 79)
     {
+      if(real) //Testa para ver se nao esta colocando mais de um ponto
+      {
+        break;
+      }
+      real = true;
       buffer_aux += programa[indice];
       this->indice++;
-      //Continua checando por números depois da vírgula
+    }
+    else if(real) //Continua checando por números depois da vírgula
+    { 
       if(GetChar(programa[indice]) >= 53 && GetChar(programa[indice]) <= 62)
       {
-        //Adiciona o dígito atual no buffer
+        //Adiciona o dígito atual depois da virgula no buffer
         buffer_aux += programa[indice];
+        real_aux += programa[indice];
         this->indice++;
-      }
-      //Caso o número seja inteiro
-      //+ - * / = < > space enter
-      else if((GetChar(programa[indice]) >= 63 && GetChar(programa[indice]) <= 69) ||
-            (GetChar(programa[indice]) >= 74 && GetChar(programa[indice]) <= 76))
-      { 
-        break;
       }
       //Caso tenha um erro depois da vírgula
       else
@@ -263,10 +277,11 @@ int LexicoPascalCompiler::number_automaton()
         //Adiciona o erro no buffer_aux
         buffer_aux += programa[indice];
         //Forma a mensagem de erro
-        string aux = "ERRO: ""Numero " +buffer_aux + " incorreto na linha " + to_string(linha_atual);
+        string aux = "ERRO: ""Numero real " + buffer_aux + " incorreto na linha " + to_string(linha_atual);
         //Adiciona a mensagem de erro no buffer de id e de token
         this->buffer_id.push_back(aux);
         this->buffer_token.push_back("Erro_Lexico");
+        this->indice++;
         return -2;
       }
     }
@@ -276,17 +291,26 @@ int LexicoPascalCompiler::number_automaton()
         //Adiciona o erro no buffer_aux
         buffer_aux += programa[indice];
         //Forma a mensagem de erro
-        string aux = "ERRO: ""Numero " +buffer_aux + " incorreto na linha " + to_string(linha_atual);
+        string aux = "ERRO: ""Numero inteiro " +buffer_aux + " incorreto na linha " + to_string(linha_atual);
         //Adiciona a mensagem de erro no buffer de id e de token
         this->buffer_id.push_back(aux);
         this->buffer_token.push_back("Erro_Lexico");
+        this->indice++;
         return -2;
     }
   }
 
   //Passando do buffer_aux para o buffer do objeto
-  this->buffer_id.push_back(buffer_aux);
-  this->buffer_token.push_back("num");
+  if(real)
+  {
+    this->buffer_id.push_back(buffer_aux);
+    this->buffer_token.push_back("numero_real"); 
+  }
+  else
+  {
+    this->buffer_id.push_back(buffer_aux);
+    this->buffer_token.push_back("numero_int"); 
+  }
 
   return 1;
 }
@@ -304,12 +328,19 @@ int LexicoPascalCompiler::indentificador_automaton()
       aux_string += programa[indice]; //salva as letras do identificador no auxiliar
       this->indice++;
     }
-    else if (aux >= 63 && aux <= 80)
+    else if (aux >= 63 && aux <= 81)
     { //se o char na posição n for um caractere reservado
       vector<string> res;
       res = GetIdentificador(aux_string);
       if(res[0] == "ERRO") //identificador nao existe
       {
+        if(aux_string.size() > 25)
+        {
+          string aux = "ERRO: ""Identificador " + aux_string + " com tamanho excedido na linha " + to_string(linha_atual);
+          this->buffer_id.push_back(aux);
+          this->buffer_token.push_back("Erro_Lexico");
+          return -2;
+        }
         buffer_id.push_back(aux_string);
         buffer_token.push_back("id");
       }
@@ -342,7 +373,7 @@ int LexicoPascalCompiler::indentificador_automaton()
         //Adiciona a mensagem de erro no buffer de id e de token
         this->buffer_id.push_back(aux);
         this->buffer_token.push_back("Erro_Lexico");
-      return -2;
+        return -2;
     }
   }
 }
@@ -350,9 +381,10 @@ int LexicoPascalCompiler::indentificador_automaton()
 int LexicoPascalCompiler::pont_virg_automaton()
 {
   this->indice++;
+  //cout << "---- " << programa[indice] << "----- ";
   string aux_string = "";
   int aux = GetChar(programa[indice]);
-  if( aux >= 74 && aux <= 76 || aux == 70)
+  if( (aux >= 74 && aux <= 76) || aux == 70 || aux == 81)
   { 
     int aux;
     aux_string += programa[indice-1];
@@ -367,7 +399,7 @@ int LexicoPascalCompiler::pont_virg_automaton()
     //Adiciona o erro no buffer_aux
         aux_string += programa[indice];
         //Forma a mensagem de erro
-        string aux = "ERRO: ""Ponto e virgula " +aux_string + " incorreto na linha " + to_string(linha_atual);
+        string aux = "ERRO: Ponto e virgula incorreto na linha " + to_string(linha_atual);
         //Adiciona a mensagem de erro no buffer de id e de token
         this->buffer_id.push_back(aux);
         this->buffer_token.push_back("Erro_Lexico");
@@ -383,9 +415,9 @@ int LexicoPascalCompiler::proibido_automaton()
   aux += programa[indice];
   
   //Só conta erro solto no caso dos erros específicos não tratados
-  if(GetChar(programa[indice-1]) >= 63 && GetChar(programa[indice-1] <= 80))
+  if(GetChar(programa[indice-1]) >= 63 && GetChar(programa[indice-1] <= 81))
   { 
-    string temp = "ERRO: ""Caractere " +aux + " invalido na linha " + to_string(linha_atual);
+    string temp = "ERRO: Caractere " +aux + " invalido na linha " + to_string(linha_atual);
     buffer_id.push_back(temp);
     buffer_token.push_back("Erro_Lexico");
     indice++;
@@ -482,6 +514,13 @@ int LexicoPascalCompiler::comentario_automaton()
   while(GetChar(programa[indice]) != 71)
   {
     indice++;
+    if(indice > programa.size())
+    {
+      string temp = "ERRO: Comentario sem fechar na linha " + to_string(linha_atual);
+      buffer_id.push_back(temp);
+      buffer_token.push_back("Erro_Lexico");
+      break;
+    }
   }
   indice++;
   return 1;

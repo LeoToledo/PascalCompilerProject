@@ -1,11 +1,12 @@
 program p;
-var x@: real;{COMENTARIO 1!}
+var x@, zzzzzzzzzzzzzzzz: real;{COMENTARIO 1!}
+var y: integer;
 begin
-	x:=1!;
-	while(x<3) do 
-{COMENTARIO 2}
+	x:=1@;
+	y:=380.12333333333333333333333333.;
+	while(x<3{comentario}) do 
+{COMENTARIO}
 	
 		x:=x+1;
 $
 end.
-
