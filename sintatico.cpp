@@ -39,21 +39,20 @@ string SintaticoPascalCompiler::get_next_simb()
     return simbolo[current_pos];
 }
 
-
 void SintaticoPascalCompiler::procedimento_programa()
-{   
+{
     if (simbolo[current_pos] == "program")
     {
         add_current_pos();
         if (simbolo[current_pos] == "ident")
-        {   
+        {
             add_current_pos();
             if (simbolo[current_pos] == ";")
-            {   
+            {
                 add_current_pos();
 
                 procedimento_corpo();
-                
+
                 add_current_pos();
                 if (simbolo[current_pos] == ".")
                 {
@@ -83,10 +82,11 @@ void SintaticoPascalCompiler::procedimento_programa()
 
 //2. <corpo> ::= <dc> begin <comandos> end
 void SintaticoPascalCompiler::procedimento_corpo()
-{   
+{
     procedimento_dc();
+
     if (simbolo[current_pos] == "begin")
-    {   
+    {
         add_current_pos();
         procedimento_comandos();
         add_current_pos();
@@ -117,7 +117,7 @@ void SintaticoPascalCompiler::procedimento_dc()
 
 //4. <dc_c> ::= const ident = <numero> ; <dc_c> | λ
 void SintaticoPascalCompiler::procedimento_dc_c()
-{   
+{
     if (simbolo[current_pos] == "const")
     {
         add_current_pos();
@@ -157,7 +157,7 @@ void SintaticoPascalCompiler::procedimento_dc_c()
         }
     }
     else
-    {  
+    {
         return; //se não for const só sai da função (lambda)
     }
 }
@@ -169,17 +169,18 @@ void SintaticoPascalCompiler::procedimento_dc_v()
     {
         add_current_pos();
         procedimento_variaveis();
-        cout <<"AQUII 2 " << simbolo[current_pos] << endl;
-        
-        cout <<"AQUII 3 " << simbolo[current_pos] << endl;
+
         if (simbolo[current_pos] == ":")
         {
             add_current_pos();
             procedimento_tipo_var();
-            add_current_pos();
+
+            //add_current_pos();
+
             if (simbolo[current_pos] == ";")
             {
                 add_current_pos();
+
                 if (simbolo[current_pos] == "var")
                 {
                     procedimento_dc_v();
@@ -191,7 +192,7 @@ void SintaticoPascalCompiler::procedimento_dc_v()
             }
             else
             {
-               return; 
+                return;
             }
         }
         else
@@ -251,10 +252,12 @@ void SintaticoPascalCompiler::procedimento_tipo_var()
     if (simbolo[current_pos] == "real")
     {
         add_current_pos();
+        return;
     }
     else if (simbolo[current_pos] == "integer")
     {
         add_current_pos();
+        return;
     }
     else
     {
@@ -269,9 +272,9 @@ void SintaticoPascalCompiler::procedimento_tipo_var()
 void SintaticoPascalCompiler::procedimento_variaveis()
 {
     if (simbolo[current_pos] == "ident")
-    {   
+    {
         add_current_pos();
-        
+
         if (simbolo[current_pos] == ",")
         {
             add_current_pos();
@@ -285,12 +288,12 @@ void SintaticoPascalCompiler::procedimento_variaveis()
             }
         }
         else
-        {   cout <<"AQUII " << simbolo[current_pos] << endl;
+        {
             return; //se não for vírgula só sai da função (lambda)
         }
     }
     else
-    {   
+    {
         cout << "ERRO - não é igual a ident";
     }
 }
@@ -440,7 +443,9 @@ void SintaticoPascalCompiler::procedimento_comandos()
 {
     if (simbolo[current_pos] == "read" || "write" || "while" || "if" || "ident" || "begin" || "for")
     {
+        procedimento_cmd();
         add_current_pos();
+
         if (simbolo[current_pos] == ";")
         {
             add_current_pos();
@@ -495,158 +500,156 @@ void SintaticoPascalCompiler::procedimento_cmd()
             add_current_pos();
             procedimento_cmd();
         }
-
-        else if (simbolo[current_pos] == "ident")
-        {
+    }
+    else if (simbolo[current_pos] == "ident")
+    {   
+        add_current_pos();
+        
+        if (simbolo[current_pos] == ":=")
+        {   
             add_current_pos();
-            if (simbolo[current_pos] == ":")
-            {
-                add_current_pos();
-                if (simbolo[current_pos] == "=")
-                {
-                    add_current_pos();
-                    procedimento_expressao();
-                    return;
-                }
-                else
-                {
-                    cout << "ERRO - não é =";
-                }
-            }
-            else if (simbolo[current_pos] == "(")
-            {
-                add_current_pos();
-                procedimento_argumentos();
-                add_current_pos();
-                if (simbolo[current_pos] == ")")
-                {
-                    return;
-                }
-                else
-                {
-                    cout << "ERRO - não é )";
-                }
-            }
-            else
-            {
-                return; //se não for ":" nem "(", sai da função (lambda)
-            }
+            procedimento_expressao();
+            return;
         }
-
-        else if (simbolo[current_pos] == "begin")
+        else if (simbolo[current_pos] == "(")
         {
             add_current_pos();
-            procedimento_comandos();
+            procedimento_argumentos();
             add_current_pos();
-            if (simbolo[current_pos] == "end")
+            if (simbolo[current_pos] == ")")
             {
                 return;
             }
             else
             {
-                cout << "ERRO - não é igual a end";
-            }
-        }
-
-        else if (simbolo[current_pos] == "if")
-        {
-            add_current_pos();
-            procedimento_condicao();
-            add_current_pos();
-            if (simbolo[current_pos] == "then")
-            {
-                add_current_pos();
-                if (simbolo[current_pos] == "read" || "write" || "while" || "if" || "ident" || "begin" || "if" || "for")
-                {
-                    procedimento_cmd();
-                }
-                else if (simbolo[current_pos] == "else")
-                {
-                    add_current_pos();
-                    procedimento_cmd();
-                }
-                else
-                {
-                    return;
-                }
-            }
-        }
-
-        else if (simbolo[current_pos] == "for")
-        {
-            add_current_pos();
-            procedimento_variaveis();
-            add_current_pos();
-            if (simbolo[current_pos] == ":")
-            {
-                add_current_pos();
-                if (simbolo[current_pos] == "=")
-                {
-                    add_current_pos();
-                    if (simbolo[current_pos] == "numero_int")
-                    {
-                        add_current_pos();
-                        if (simbolo[current_pos] == "to")
-                        {
-                            add_current_pos();
-                            if (simbolo[current_pos] == "numero_int")
-                            {
-                                add_current_pos();
-                                if (simbolo[current_pos] == "do")
-                                {
-                                    return;
-                                }
-                                else
-                                {
-                                    cout << "ERRO - não é igual a do";
-                                }
-                            }
-                            else
-                            {
-                                cout << "ERRO - não é igual a numero_int";
-                            }
-                        }
-                        else
-                        {
-                            cout << "ERRO - não é igual a to";
-                        }
-                    }
-                    else
-                    {
-                        cout << "ERRO - não é igual a numero_int";
-                    }
-                }
-                else
-                {
-                    cout << "ERRO - não é igual a =";
-                }
-            }
-            else
-            {
-                cout << "ERRO - não é igual a :";
+                cout << "ERRO - não é )";
             }
         }
         else
         {
-            cout << "ERRO - Nenhum regra do cmd foi utilizada";
+            return; //se não for ":" nem "(", sai da função (lambda)
         }
+    }
+
+    else if (simbolo[current_pos] == "begin")
+    {
+        add_current_pos();
+        procedimento_comandos();
+        add_current_pos();
+        if (simbolo[current_pos] == "end")
+        {
+            return;
+        }
+        else
+        {
+            cout << "ERRO - não é igual a end";
+        }
+    }
+
+    else if (simbolo[current_pos] == "if")
+    {
+        add_current_pos();
+        procedimento_condicao();
+        add_current_pos();
+        if (simbolo[current_pos] == "then")
+        {
+            add_current_pos();
+            if (simbolo[current_pos] == "read" || "write" || "while" || "if" || "ident" || "begin" || "if" || "for")
+            {
+                procedimento_cmd();
+            }
+            else if (simbolo[current_pos] == "else")
+            {
+                add_current_pos();
+                procedimento_cmd();
+            }
+            else
+            {
+                return;
+            }
+        }
+    }
+
+    else if (simbolo[current_pos] == "for")
+    {
+        add_current_pos();
+        procedimento_variaveis();
+        add_current_pos();
+        if (simbolo[current_pos] == ":")
+        {
+            add_current_pos();
+            if (simbolo[current_pos] == "=")
+            {
+                add_current_pos();
+                if (simbolo[current_pos] == "numero_int")
+                {
+                    add_current_pos();
+                    if (simbolo[current_pos] == "to")
+                    {
+                        add_current_pos();
+                        if (simbolo[current_pos] == "numero_int")
+                        {
+                            add_current_pos();
+                            if (simbolo[current_pos] == "do")
+                            {
+                                return;
+                            }
+                            else
+                            {
+                                cout << "ERRO - não é igual a do";
+                            }
+                        }
+                        else
+                        {
+                            cout << "ERRO - não é igual a numero_int";
+                        }
+                    }
+                    else
+                    {
+                        cout << "ERRO - não é igual a to";
+                    }
+                }
+                else
+                {
+                    cout << "ERRO - não é igual a numero_int";
+                }
+            }
+            else
+            {
+                cout << "ERRO - não é igual a =";
+            }
+        }
+        else
+        {
+            cout << "ERRO - não é igual a :";
+        }
+    }
+    else
+    {
+        cout << "ERRO - Nenhum regra do cmd foi utilizada";
     }
 }
 
 //23. <expressao> ::= <termo> <outros_termos>
 void SintaticoPascalCompiler::procedimento_expressao()
-{
-    if(simbolo[current_pos] == "+" || "-" || "ident" || "numero_int" || "numero_real" || "("){
+{   cout << "AQUI: " << simbolo[current_pos] << endl;
+    if (simbolo[current_pos] == "+" || "-" || "ident" || "numero_int" || "numero_real" || "(")
+    {
         procedimento_termo();
         add_current_pos();
-        if(simbolo[current_pos] == "-" || "+"){
+        if (simbolo[current_pos] == "-" || "+")
+        {
             procedimento_termo();
             add_current_pos();
-        }else{
+        }
+        else
+        {
             return;
         }
-    }else{
-        printf("ERRO - não é + || - || ident || numero_int || numero_real || ( "); 
+    }
+    else
+    {
+        printf("ERRO - não é + || - || ident || numero_int || numero_real || ( ");
     }
 }
 
