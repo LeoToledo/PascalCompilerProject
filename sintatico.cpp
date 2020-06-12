@@ -56,7 +56,7 @@ void SintaticoPascalCompiler::procedimento_programa()
                 add_current_pos();
                 if (simbolo[current_pos] == ".")
                 {
-                    printf("Sucesso");
+                    printf("SUCESSO");
                     return;
                 }
                 else
@@ -89,7 +89,7 @@ void SintaticoPascalCompiler::procedimento_corpo()
     {
         add_current_pos();
         procedimento_comandos();
-        add_current_pos();
+
         if (simbolo[current_pos] == "end")
         {
             return;
@@ -175,7 +175,6 @@ void SintaticoPascalCompiler::procedimento_dc_v()
             add_current_pos();
             procedimento_tipo_var();
 
-            //add_current_pos();
 
             if (simbolo[current_pos] == ";")
             {
@@ -441,19 +440,22 @@ void SintaticoPascalCompiler::procedimento_argumentos()
 //19. <comandos> ::= <cmd> ; <comandos> | λ
 void SintaticoPascalCompiler::procedimento_comandos()
 {
-    if (simbolo[current_pos] == "read" || "write" || "while" || "if" || "ident" || "begin" || "for")
-    {
+    if (simbolo[current_pos] == "read" ||simbolo[current_pos] ==  "write" ||simbolo[current_pos] ==  "while" ||simbolo[current_pos] ==  "if" ||simbolo[current_pos] ==  "ident" ||simbolo[current_pos] ==  "begin" ||simbolo[current_pos] ==  "for")
+    { 
         procedimento_cmd();
-        add_current_pos();
+ 
+        //add_current_pos();
+
 
         if (simbolo[current_pos] == ";")
-        {
+        { 
+
             add_current_pos();
-            procedimento_variaveis();
+            procedimento_comandos();
             return;
         }
         else
-        {
+        {   
             cout << "ERRO - não é igual a ;";
         }
     }
@@ -632,18 +634,19 @@ void SintaticoPascalCompiler::procedimento_cmd()
 
 //23. <expressao> ::= <termo> <outros_termos>
 void SintaticoPascalCompiler::procedimento_expressao()
-{   cout << "AQUI: " << simbolo[current_pos] << endl;
-    if (simbolo[current_pos] == "+" || "-" || "ident" || "numero_int" || "numero_real" || "(")
-    {
+{   
+    if (simbolo[current_pos] == "+" ||simbolo[current_pos] == "-" ||simbolo[current_pos] == "ident" || simbolo[current_pos] =="numero_int" || simbolo[current_pos] =="numero_real" ||simbolo[current_pos] == "(")
+    {   
         procedimento_termo();
-        add_current_pos();
-        if (simbolo[current_pos] == "-" || "+")
+        //add_current_pos();
+        
+        if (simbolo[current_pos] == "-" ||simbolo[current_pos] == "+")
         {
             procedimento_termo();
             add_current_pos();
         }
         else
-        {
+        {   
             return;
         }
     }
@@ -712,36 +715,38 @@ void SintaticoPascalCompiler::procedimento_condicao()
 //24. <op_un> ::= + | - | λ com
 //27. <termo> ::= <op_un> <fator> <mais_fatores>
 void SintaticoPascalCompiler::procedimento_termo()
-{
-    if (simbolo[current_pos] == "+" || "-")
-    {
+{  
+    if (simbolo[current_pos] == "+" || simbolo[current_pos] == "-")
+    {    
         add_current_pos();
-        if (simbolo[current_pos] == "ident" || "numero_int" || "numero_real" || "(")
-        {
-            procedimento_fator();
+        if (simbolo[current_pos] == "ident" ||simbolo[current_pos] ==  "numero_int" ||simbolo[current_pos] ==  "numero_real" ||simbolo[current_pos] ==  "(")
+        {   
+            procedimento_fator(); 
             add_current_pos();
-            if (simbolo[current_pos] == "*" || "/")
+            if (simbolo[current_pos] == "*" || simbolo[current_pos] == "/")
             {
                 procedimento_mais_fatores();
                 return;
             }
             else
-            {
+            {   
                 return; //se não for "*" nem "/", sai da funcao (lambda)
             }
         }
     }
-    else if (simbolo[current_pos] == "ident" || "numero_int" || "numero_real" || "(")
-    {
+    
+    else if (simbolo[current_pos] == "ident" || simbolo[current_pos] == "numero_int" ||simbolo[current_pos] ==  "numero_real" ||simbolo[current_pos] ==  "(")
+    {     
         procedimento_fator();
         add_current_pos();
-        if (simbolo[current_pos] == "*" || "/")
+        
+        if (simbolo[current_pos] == "*" || simbolo[current_pos] == "/")
         {
             procedimento_mais_fatores();
             return;
         }
         else
-        {
+        {   
             return; //se não for "*" nem "/", sai da funcao (lambda)
         }
     }
@@ -757,6 +762,7 @@ void SintaticoPascalCompiler::procedimento_outros_termos()
         if (simbolo[current_pos] == "+" || "-" || "ident" || "numero_int" || "numero_real" || "(")
         {
             procedimento_termo();
+            
             add_current_pos();
             if (simbolo[current_pos] == "+" || "-")
             {
@@ -786,9 +792,10 @@ void SintaticoPascalCompiler::procedimento_mais_fatores()
     {
         add_current_pos();
         if (simbolo[current_pos] == "ident" || "numero_int" || "numero_real" || "(")
-        {
+        {   
             procedimento_fator();
             add_current_pos();
+            
             if (simbolo[current_pos] == "*" || "/")
             {
                 procedimento_mais_fatores();
@@ -813,19 +820,19 @@ void SintaticoPascalCompiler::procedimento_mais_fatores()
 //31. <numero> ::= numero_int | numero_real
 //23. <expressao> ::= <termo> <outros_termos>
 void SintaticoPascalCompiler::procedimento_fator()
-{
-    if (simbolo[current_pos] == "ident" || "numero_int" || "numero_real")
+{   
+    if (simbolo[current_pos] == "ident" ||simbolo[current_pos] == "numero_int" ||simbolo[current_pos] == "numero_real")
     {
         return;
     }
     else if (simbolo[current_pos] == "(")
     {
         add_current_pos();
-        if (simbolo[current_pos] == "+" || "-" || "ident" || "numero_int" || "numero_real" || "(")
+        if (simbolo[current_pos] == "+" ||simbolo[current_pos] == "-" || simbolo[current_pos] =="ident" ||simbolo[current_pos] == "numero_int" || simbolo[current_pos] =="numero_real" || simbolo[current_pos] =="(")
         {
             procedimento_termo();
             add_current_pos();
-            if (simbolo[current_pos] == "+" || "-")
+            if (simbolo[current_pos] == "+" ||simbolo[current_pos] == "-")
             {
                 procedimento_outros_termos();
                 add_current_pos();
