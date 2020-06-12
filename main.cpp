@@ -58,6 +58,14 @@ int main(int argc, char const *argv[])
                 } 
             }
 
+            //Escrevendo no arquivo
+            ofstream outputFile;
+            outputFile.open("output.txt");
+            for(int i = 0; i < lexico.buffer_id.size(); i++)
+            {
+                outputFile << lexico.buffer_id[i] << ", " << lexico.buffer_token[i] << endl;
+            }
+
             //################################################################################################
             //###########################################SINTATICO############################################
             //################################################################################################
