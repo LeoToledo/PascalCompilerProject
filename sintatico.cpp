@@ -18,9 +18,10 @@ void SintaticoPascalCompiler::set_simbolo(vector<string> simb)
     }
 }
 
-void SintaticoPascalCompiler::add_current_pos()
+void SintaticoPascalCompiler::add_current_pos(int profundidade)
 {
     current_pos++;
+    cout << simbolo[current_pos] << " " << profundidade << endl;
 }
 int SintaticoPascalCompiler::get_current_pos()
 {
@@ -30,111 +31,133 @@ int SintaticoPascalCompiler::get_current_pos()
 void SintaticoPascalCompiler::ASD(vector<string> symbol)
 {
     set_simbolo(symbol);
-    procedimento_programa();
+    int profundidade = 0;
+    procedimento_programa(profundidade);
 }
 
 string SintaticoPascalCompiler::get_next_simb()
 {
-    add_current_pos();
+    //add_current_pos(profundidade);
     return simbolo[current_pos];
 }
 
-void SintaticoPascalCompiler::procedimento_programa()
+void SintaticoPascalCompiler::procedimento_programa(int profundidade)
 {
+    cout << "--- procedimento_programa() --- " << profundidade << endl;
+    profundidade++;
+    
     if (simbolo[current_pos] == "program")
     {
-        add_current_pos();
+        add_current_pos(profundidade);
+        
         if (simbolo[current_pos] == "ident")
         {
-            add_current_pos();
+            add_current_pos(profundidade);
+            
             if (simbolo[current_pos] == ";")
             {
-                add_current_pos();
+                add_current_pos(profundidade);
+                
+                procedimento_corpo(profundidade);
 
-                procedimento_corpo();
-
-                add_current_pos();
+                add_current_pos(profundidade);
+                
                 if (simbolo[current_pos] == ".")
                 {
-                    printf("SUCESSO");
+                    printf("Sucesso");
                     return;
                 }
                 else
                 {
-                    cout << "ERRO - não é igual a .";
+                    cout << "ERRO - não é igual a ." << endl;
                 }
             }
             else
             {
-                cout << "ERRO - não é igual a ;";
+                cout << "ERRO - não é igual a ;" << endl;
             }
         }
         else
         {
-            cout << "ERRO - não é igual a ident";
+            cout << "ERRO - não é igual a ident" << endl;
         }
     }
     else
     {
-        cout << "ERRO - não é igual a program";
+        cout << "ERRO - não é igual a program" << endl;
     }
 }
 
+
 //2. <corpo> ::= <dc> begin <comandos> end
-void SintaticoPascalCompiler::procedimento_corpo()
+void SintaticoPascalCompiler::procedimento_corpo(int profundidade)
 {
-    procedimento_dc();
+    cout << "--- procedimento_corpo() ---" << profundidade << endl;
+    profundidade++;
+    procedimento_dc(profundidade);
 
     if (simbolo[current_pos] == "begin")
     {
-        add_current_pos();
-        procedimento_comandos();
-
+        add_current_pos(profundidade);
+        
+        procedimento_comandos(profundidade);
+        
         if (simbolo[current_pos] == "end")
         {
-            return;
+            cout << "Retornou" << endl;
         }
         else
         {
-            cout << "ERRO - não é igual a end";
+            cout << "ERRO - não é igual a end" << endl;
         }
     }
     else
     {
-        cout << "ERRO - não é igual a begin";
+        cout << "ERRO - não é igual a begin" << endl;
     }
 }
 
+
 //3. <dc> ::= <dc_c> <dc_v> <dc_p>
-void SintaticoPascalCompiler::procedimento_dc()
+void SintaticoPascalCompiler::procedimento_dc(int profundidade)
 {
-    procedimento_dc_c();
-    //add_current_pos();
-    procedimento_dc_v();
-    //add_current_pos();
-    procedimento_dc_p();
+    cout << "--- procedimento_dc() ---" << profundidade << endl;
+    profundidade++;
+    procedimento_dc_c(profundidade);
+    //add_current_pos(profundidade);
+    procedimento_dc_v(profundidade);
+    //add_current_pos(profundidade);
+    procedimento_dc_p(profundidade);
 }
 
+
 //4. <dc_c> ::= const ident = <numero> ; <dc_c> | λ
-void SintaticoPascalCompiler::procedimento_dc_c()
+void SintaticoPascalCompiler::procedimento_dc_c(int profundidade)
 {
+    cout << "--- procedimento_dc_c() ---" << profundidade << endl;
+    profundidade++;
     if (simbolo[current_pos] == "const")
     {
-        add_current_pos();
+        add_current_pos(profundidade);
+        
         if (simbolo[current_pos] == "ident")
         {
-            add_current_pos();
+            add_current_pos(profundidade);
+            
             if (simbolo[current_pos] == "=")
             {
-                add_current_pos();
-                procedimento_fator();
-                add_current_pos();
+                add_current_pos(profundidade);
+                
+                procedimento_fator(profundidade);
+                add_current_pos(profundidade);
+                
                 if (simbolo[current_pos] == ";")
                 {
-                    add_current_pos();
+                    add_current_pos(profundidade);
+                    
                     if (simbolo[current_pos] == "const")
                     {
-                        procedimento_dc_c();
+                        procedimento_dc_c(profundidade);
                     }
                     else
                     {
@@ -143,17 +166,17 @@ void SintaticoPascalCompiler::procedimento_dc_c()
                 }
                 else
                 {
-                    cout << "ERRO - não é igual a ;";
+                    cout << "ERRO - não é igual a ;" << endl;
                 }
             }
             else
             {
-                cout << "Erro - não é igual a =";
+                cout << "Erro - não é igual a =" << endl;
             }
         }
         else
         {
-            cout << "Erro - não é igual a ident";
+            cout << "Erro - não é igual a ident" << endl;
         }
     }
     else
@@ -163,26 +186,29 @@ void SintaticoPascalCompiler::procedimento_dc_c()
 }
 
 //5. <dc_v> ::= var <variaveis> : <tipo_var> ; <dc_v> | λ
-void SintaticoPascalCompiler::procedimento_dc_v()
+void SintaticoPascalCompiler::procedimento_dc_v(int profundidade)
 {
+    cout << "--- procedimento_dc_v() ---" << profundidade << endl;
+    profundidade++;
     if (simbolo[current_pos] == "var")
     {
-        add_current_pos();
-        procedimento_variaveis();
+        add_current_pos(profundidade);
+        
+        procedimento_variaveis(profundidade);
 
         if (simbolo[current_pos] == ":")
         {
-            add_current_pos();
-            procedimento_tipo_var();
-
+            add_current_pos(profundidade);
+            
+            procedimento_tipo_var(profundidade);
 
             if (simbolo[current_pos] == ";")
             {
-                add_current_pos();
-
+                add_current_pos(profundidade);
+                
                 if (simbolo[current_pos] == "var")
                 {
-                    procedimento_dc_v();
+                    procedimento_dc_v(profundidade);
                 }
                 else
                 {
@@ -206,23 +232,29 @@ void SintaticoPascalCompiler::procedimento_dc_v()
 }
 
 //9. <dc_p> ::= precedure ident <parametros> ; <corpo> <dc_p> | λ
-void SintaticoPascalCompiler::procedimento_dc_p()
+void SintaticoPascalCompiler::procedimento_dc_p(int profundidade)
 {
+    cout << "--- procedimento_dc_p() ---" << profundidade << endl;
+    profundidade++;
     if (simbolo[current_pos] == "procedure")
     {
-        add_current_pos();
+        add_current_pos(profundidade);
+        
         if (simbolo[current_pos] == "ident")
         {
-            add_current_pos();
-            procedimento_parametros();
-            add_current_pos();
+            add_current_pos(profundidade);
+            
+            procedimento_parametros(profundidade);
+            add_current_pos(profundidade);
+            
             if (simbolo[current_pos] == ";")
             {
-                add_current_pos();
-                procedimento_corpo_p();
+                add_current_pos(profundidade);
+                
+                procedimento_corpo_p(profundidade);
                 if (simbolo[current_pos] == "procedure")
                 {
-                    procedimento_dc_p();
+                    procedimento_dc_p(profundidade);
                 }
                 else
                 {
@@ -231,12 +263,12 @@ void SintaticoPascalCompiler::procedimento_dc_p()
             }
             else
             {
-                cout << "ERRO - não é igual a ;";
+                cout << "ERRO - não é igual a ;" << endl;
             }
         }
         else
         {
-            cout << "ERRO - não é igual a :";
+            cout << "ERRO - não é igual a :" << endl;
         }
     }
     else
@@ -246,21 +278,25 @@ void SintaticoPascalCompiler::procedimento_dc_p()
 }
 
 //6. <tipo_var> ::= real | integer
-void SintaticoPascalCompiler::procedimento_tipo_var()
+void SintaticoPascalCompiler::procedimento_tipo_var(int profundidade)
 {
+    cout << "--- procedimento_tipo_var() ---" << profundidade << endl;
+    profundidade++;
     if (simbolo[current_pos] == "real")
     {
-        add_current_pos();
+        add_current_pos(profundidade);
+        
         return;
     }
     else if (simbolo[current_pos] == "integer")
     {
-        add_current_pos();
+        add_current_pos(profundidade);
+        
         return;
     }
     else
     {
-        cout << "ERRO - não é igual a real ou integer";
+        cout << "ERRO - não é igual a real ou integer" << endl;
     }
 }
 
@@ -268,22 +304,26 @@ void SintaticoPascalCompiler::procedimento_tipo_var()
 //8. <mais_var> ::= , <variaveis> | λ
 
 //ident ,variaveis
-void SintaticoPascalCompiler::procedimento_variaveis()
+void SintaticoPascalCompiler::procedimento_variaveis(int profundidade)
 {
+    cout << "--- procedimento_variaveis() ---" << profundidade << endl;
+    profundidade++;
     if (simbolo[current_pos] == "ident")
     {
-        add_current_pos();
+        add_current_pos(profundidade);
+        
 
         if (simbolo[current_pos] == ",")
         {
-            add_current_pos();
+            add_current_pos(profundidade);
+            
             if (simbolo[current_pos] == "ident")
             {
-                procedimento_variaveis();
+                procedimento_variaveis(profundidade);
             }
             else
             {
-                cout << "ERRO - não é igual a ident";
+                cout << "ERRO - não é igual a ident" << endl;
             }
         }
         else
@@ -293,25 +333,28 @@ void SintaticoPascalCompiler::procedimento_variaveis()
     }
     else
     {
-        cout << "ERRO - não é igual a ident";
+        cout << "ERRO - não é igual a ident" << endl;
     }
 }
 
 //10- <parametros> ::= ( <lista_par> ) | lambda
-void SintaticoPascalCompiler::procedimento_parametros()
+void SintaticoPascalCompiler::procedimento_parametros(int profundidade)
 {
+    cout << "--- procedimento_parametros() ---" << profundidade << endl;
+    profundidade++;
     if (simbolo[current_pos] == "(")
     {
-        add_current_pos();
-        procedimento_lista_par();
-        add_current_pos();
+        add_current_pos(profundidade);        
+        procedimento_lista_par(profundidade);
+        add_current_pos(profundidade);
+        
         if (simbolo[current_pos] == ")")
         {
             return;
         }
         else
         {
-            cout << "ERRO - não é igual a )";
+            cout << "ERRO - não é igual a )" << endl;
         }
     }
     else
@@ -322,18 +365,22 @@ void SintaticoPascalCompiler::procedimento_parametros()
 
 //11- <lista_par> ::= <variaveis> : <tipo_var> <mais_par>
 //12 -<mais_par> ::= ; <lista_par> | lambda
-void SintaticoPascalCompiler::procedimento_lista_par()
+void SintaticoPascalCompiler::procedimento_lista_par(int profundidade)
 {
-    procedimento_variaveis();
-    add_current_pos();
+    cout << "--- procedimento_lista_par() ---" << profundidade << endl;
+    profundidade++;
+    procedimento_variaveis(profundidade);
+    add_current_pos(profundidade);
+    
     if (simbolo[current_pos] == ":")
     {
-        add_current_pos();
-        procedimento_tipo_var();
-        add_current_pos();
+        add_current_pos(profundidade);
+        procedimento_tipo_var(profundidade);
+        add_current_pos(profundidade);
+        
         if (simbolo[current_pos] == ";")
         {
-            procedimento_lista_par();
+            procedimento_lista_par(profundidade);
         }
         else
         {
@@ -342,77 +389,91 @@ void SintaticoPascalCompiler::procedimento_lista_par()
     }
     else
     {
-        cout << "ERRO - não é igual a :";
+        cout << "ERRO - não é igual a :" << endl;
     }
 }
 
 //13. <corpo_p> ::= <dc_loc> begin <comandos> end ; com
 //14. <dc_loc> ::= <dc_v>
-void SintaticoPascalCompiler::procedimento_corpo_p()
+void SintaticoPascalCompiler::procedimento_corpo_p(int profundidade)
 {
-    procedimento_dc_v();
-    add_current_pos();
+    cout << "--- procedimento_corpo_p() ---" << profundidade << endl;
+    profundidade++;
+    procedimento_dc_v(profundidade);
+    add_current_pos(profundidade);
+    
     if (simbolo[current_pos] == "begin")
     {
-        add_current_pos();
-        procedimento_comandos();
-        add_current_pos();
+        add_current_pos(profundidade);
+        procedimento_comandos(profundidade);
+        add_current_pos(profundidade);
+        
         if (simbolo[current_pos] == "end")
         {
-            add_current_pos();
+            add_current_pos(profundidade);
+            
             if (simbolo[current_pos] == ";")
             {
                 return;
             }
             else
             {
-                cout << "ERRO - não é igual a ;";
+                cout << "ERRO - não é igual a ;" << endl;
             }
         }
         else
         {
-            cout << "ERRO - não é igual a end";
+            cout << "ERRO - não é igual a end" << endl;
         }
     }
     else
     {
-        cout << "ERRO - não é igual a begin";
+        cout << "ERRO - não é igual a begin" << endl;
     }
 }
 
+
 //15. <lista_arg> ::= ( <argumentos> ) | λ
-//int procedimento_lista_arg(simbolo){
-//    if(simbolo == "("){
-//        simbolo = get_next_simb();
-//        procedimento_argumentos(simbolo);
-//        simbolo = get_next_simb();
-//        if(simbolo == ")"){
-//            return;
-//        }else{
-//            ERRO - não é igual a ")"
-//        }
-//    }else{
-//        return; //se não for "(", sai da função (lambda)
-//    }
-//}
+void SintaticoPascalCompiler::procedimento_lista_arg(int profundidade){
+    cout << "--- procedimento_lista_arg() ---" << profundidade << endl;
+    profundidade++;
+    if(simbolo[current_pos] == "("){
+        add_current_pos(profundidade);
+        procedimento_argumentos(profundidade);
+        add_current_pos(profundidade);
+        
+        if(simbolo[current_pos] == ")"){
+            return;
+        }else{
+            cout << "ERRO - não é igual a )" << endl;
+        }
+    }else{
+        return; //se não for "(", sai da função (lambda)
+    }
+}
+
 
 //16. <argumentos> ::= ident <mais_ident> com
 //17. <mais_ident> ::= ; <argumentos> | λ
-void SintaticoPascalCompiler::procedimento_argumentos()
+void SintaticoPascalCompiler::procedimento_argumentos(int profundidade)
 {
+    cout << "--- procedimento_argumentos() ---" << profundidade << endl;
+    profundidade++;
     if (simbolo[current_pos] == "ident")
     {
-        add_current_pos();
+        add_current_pos(profundidade);
+        
         if (simbolo[current_pos] == ";")
         {
-            add_current_pos();
+            add_current_pos(profundidade);
+            
             if (simbolo[current_pos] == "ident")
             {
-                procedimento_argumentos();
+                procedimento_argumentos(profundidade);
             }
             else
             {
-                cout << "ERRO - não é igual a ident";
+                cout << "ERRO - não é igual a ident" << endl;
             }
         }
         else
@@ -422,7 +483,7 @@ void SintaticoPascalCompiler::procedimento_argumentos()
     }
     else
     {
-        cout << "ERRO - não é igual a ident";
+        cout << "ERRO - não é igual a ident" << endl;
     }
 }
 
@@ -438,20 +499,22 @@ void SintaticoPascalCompiler::procedimento_argumentos()
 //}
 
 //19. <comandos> ::= <cmd> ; <comandos> | λ
-void SintaticoPascalCompiler::procedimento_comandos()
+void SintaticoPascalCompiler::procedimento_comandos(int profundidade)
 {
+    cout << "--- procedimento_comandos() ---" << profundidade << endl;
     if (simbolo[current_pos] == "read" ||simbolo[current_pos] ==  "write" ||simbolo[current_pos] ==  "while" ||simbolo[current_pos] ==  "if" ||simbolo[current_pos] ==  "ident" ||simbolo[current_pos] ==  "begin" ||simbolo[current_pos] ==  "for")
     { 
-        procedimento_cmd();
+        procedimento_cmd(profundidade);
  
-        //add_current_pos();
+        //add_current_pos(profundidade);
 
 
         if (simbolo[current_pos] == ";")
         { 
 
-            add_current_pos();
-            procedimento_comandos();
+            add_current_pos(profundidade);
+            
+            procedimento_comandos(profundidade);
             return;
         }
         else
@@ -476,48 +539,53 @@ void SintaticoPascalCompiler::procedimento_comandos()
 //                for <variaveis> := numero_int to numero_int do
 //    <cmd_aux’> ::= := <expressao> | <lista_arg>
 
-void SintaticoPascalCompiler::procedimento_cmd()
+void SintaticoPascalCompiler::procedimento_cmd(int profundidade)
 {
+    cout << "--- procedimento_cmd() ---" << profundidade << endl;
+    profundidade++;
     if (simbolo[current_pos] == "read")
     {
-        add_current_pos();
-        procedimento_variaveis();
+        add_current_pos(profundidade);
+        procedimento_variaveis(profundidade);
         return;
     }
 
     else if (simbolo[current_pos] == "write")
     {
-        add_current_pos();
-        procedimento_variaveis();
+        add_current_pos(profundidade);
+        procedimento_variaveis(profundidade);
         return;
     }
 
     else if (simbolo[current_pos] == "while")
     {
-        add_current_pos();
-        procedimento_condicao();
-        add_current_pos();
+        add_current_pos(profundidade);
+        procedimento_condicao(profundidade);
+        add_current_pos(profundidade);
+        
         if (simbolo[current_pos] == "do")
         {
-            add_current_pos();
-            procedimento_cmd();
+            add_current_pos(profundidade);
+            procedimento_cmd(profundidade);
         }
     }
     else if (simbolo[current_pos] == "ident")
     {   
-        add_current_pos();
+        add_current_pos(profundidade);
+        
         
         if (simbolo[current_pos] == ":=")
         {   
-            add_current_pos();
-            procedimento_expressao();
+            add_current_pos(profundidade);
+            procedimento_expressao(profundidade);
             return;
         }
         else if (simbolo[current_pos] == "(")
         {
-            add_current_pos();
-            procedimento_argumentos();
-            add_current_pos();
+            add_current_pos(profundidade);
+            procedimento_argumentos(profundidade);
+            add_current_pos(profundidade);
+            
             if (simbolo[current_pos] == ")")
             {
                 return;
@@ -535,9 +603,11 @@ void SintaticoPascalCompiler::procedimento_cmd()
 
     else if (simbolo[current_pos] == "begin")
     {
-        add_current_pos();
-        procedimento_comandos();
-        add_current_pos();
+        add_current_pos(profundidade);
+        
+        procedimento_comandos(profundidade);
+        add_current_pos(profundidade);
+        
         if (simbolo[current_pos] == "end")
         {
             return;
@@ -550,20 +620,24 @@ void SintaticoPascalCompiler::procedimento_cmd()
 
     else if (simbolo[current_pos] == "if")
     {
-        add_current_pos();
-        procedimento_condicao();
-        add_current_pos();
+        add_current_pos(profundidade);
+        
+        procedimento_condicao(profundidade);
+        add_current_pos(profundidade);
+        
         if (simbolo[current_pos] == "then")
         {
-            add_current_pos();
+            add_current_pos(profundidade);
+            
             if (simbolo[current_pos] == "read" || "write" || "while" || "if" || "ident" || "begin" || "if" || "for")
             {
-                procedimento_cmd();
+                procedimento_cmd(profundidade);
             }
             else if (simbolo[current_pos] == "else")
             {
-                add_current_pos();
-                procedimento_cmd();
+                add_current_pos(profundidade);
+                
+                procedimento_cmd(profundidade);
             }
             else
             {
@@ -574,76 +648,84 @@ void SintaticoPascalCompiler::procedimento_cmd()
 
     else if (simbolo[current_pos] == "for")
     {
-        add_current_pos();
-        procedimento_variaveis();
-        add_current_pos();
+        add_current_pos(profundidade);
+        
+        procedimento_variaveis(profundidade);
+        add_current_pos(profundidade);
+        
         if (simbolo[current_pos] == ":")
         {
-            add_current_pos();
+            add_current_pos(profundidade);
+            
             if (simbolo[current_pos] == "=")
             {
-                add_current_pos();
+                add_current_pos(profundidade);
+                
                 if (simbolo[current_pos] == "numero_int")
                 {
-                    add_current_pos();
+                    add_current_pos(profundidade);
+                    
                     if (simbolo[current_pos] == "to")
                     {
-                        add_current_pos();
+                        add_current_pos(profundidade);
+                        
                         if (simbolo[current_pos] == "numero_int")
                         {
-                            add_current_pos();
+                            add_current_pos(profundidade);
+                            
                             if (simbolo[current_pos] == "do")
                             {
                                 return;
                             }
                             else
                             {
-                                cout << "ERRO - não é igual a do";
+                                cout << "ERRO - não é igual a do" << endl;
                             }
                         }
                         else
                         {
-                            cout << "ERRO - não é igual a numero_int";
+                            cout << "ERRO - não é igual a numero_int" << endl;
                         }
                     }
                     else
                     {
-                        cout << "ERRO - não é igual a to";
+                        cout << "ERRO - não é igual a to" << endl;
                     }
                 }
                 else
                 {
-                    cout << "ERRO - não é igual a numero_int";
+                    cout << "ERRO - não é igual a numero_int" << endl;
                 }
             }
             else
             {
-                cout << "ERRO - não é igual a =";
+                cout << "ERRO - não é igual a =" << endl;
             }
         }
         else
         {
-            cout << "ERRO - não é igual a :";
+            cout << "ERRO - não é igual a :" << endl;
         }
     }
     else
     {
-        cout << "ERRO - Nenhum regra do cmd foi utilizada";
+        cout << "ERRO - Nenhum regra do cmd foi utilizada" << endl;
     }
 }
 
 //23. <expressao> ::= <termo> <outros_termos>
-void SintaticoPascalCompiler::procedimento_expressao()
+void SintaticoPascalCompiler::procedimento_expressao(int profundidade)
 {   
+    cout << "--- procedimento_expressao() ---" << profundidade << endl;
     if (simbolo[current_pos] == "+" ||simbolo[current_pos] == "-" ||simbolo[current_pos] == "ident" || simbolo[current_pos] =="numero_int" || simbolo[current_pos] =="numero_real" ||simbolo[current_pos] == "(")
     {   
-        procedimento_termo();
-        //add_current_pos();
+        procedimento_termo(profundidade);
+        //add_current_pos(profundidade);
         
         if (simbolo[current_pos] == "-" ||simbolo[current_pos] == "+")
         {
-            procedimento_termo();
-            add_current_pos();
+            procedimento_termo(profundidade);
+            add_current_pos(profundidade);
         }
         else
         {   
@@ -659,22 +741,23 @@ void SintaticoPascalCompiler::procedimento_expressao()
 //21. <condicao> ::= <expressao> <relacao> <expressao>
 //22. <relacao> ::= = | <> | >= | <= | > | <
 //23. <expressao> ::= <termo> <outros_termos>
-void SintaticoPascalCompiler::procedimento_condicao()
+void SintaticoPascalCompiler::procedimento_condicao(int profundidade)
 {
+    cout << "--- procedimento_condicao() ---" << profundidade << endl;
     if (simbolo[current_pos] == "+" || "-" || "ident" || "numero_int" || "numero_real" || "(")
     {
-        procedimento_termo();
-        add_current_pos();
+        procedimento_termo(profundidade);
+        add_current_pos(profundidade);
         if (simbolo[current_pos] == "+" || "-")
         {
-            procedimento_outros_termos();
-            add_current_pos();
+            procedimento_outros_termos(profundidade);
+            add_current_pos(profundidade);
             if (simbolo[current_pos] == "=" || "diferente" || "maior_igual" || "menor_igual" || ">" || "<")
             {
-                add_current_pos();
+                add_current_pos(profundidade);
                 if (simbolo[current_pos] == "+" || "-" || "ident" || "numero_int" || "numero_real" || "(")
                 {
-                    procedimento_condicao();
+                    procedimento_condicao(profundidade);
                 }
                 else
                 {
@@ -683,17 +766,17 @@ void SintaticoPascalCompiler::procedimento_condicao()
             }
             else
             {
-                cout << "ERRO - não é igual a = || diferente || maior_igual || menor_igual || > || <";
+                cout << "ERRO - não é igual a = || diferente || maior_igual || menor_igual || > || <" << endl;
             }
         }
         else
         {
             if (simbolo[current_pos] == "=" || "diferente" || "maior_igual" || "menor_igual" || ">" || "<")
             {
-                add_current_pos();
+                add_current_pos(profundidade);
                 if (simbolo[current_pos] == "+" || "-" || "ident" || "numero_int" || "numero_real" || "(")
                 {
-                    procedimento_condicao();
+                    procedimento_condicao(profundidade);
                 }
                 else
                 {
@@ -702,30 +785,31 @@ void SintaticoPascalCompiler::procedimento_condicao()
             }
             else
             {
-                cout << "ERRO - não é igual a = || diferente || maior_igual || menor_igual || > || <";
+                cout << "ERRO - não é igual a = || diferente || maior_igual || menor_igual || > || <" << endl;
             }
         }
     }
     else
     {
-        cout << "ERRO - não é igual a + || - || ident || numero_int || numero_real || (";
+        cout << "ERRO - não é igual a + || - || ident || numero_int || numero_real || (" << endl;
     }
 }
 
 //24. <op_un> ::= + | - | λ com
 //27. <termo> ::= <op_un> <fator> <mais_fatores>
-void SintaticoPascalCompiler::procedimento_termo()
+void SintaticoPascalCompiler::procedimento_termo(int profundidade)
 {  
+    cout << "--- procedimento_termo() ---" << profundidade << endl;
     if (simbolo[current_pos] == "+" || simbolo[current_pos] == "-")
     {    
-        add_current_pos();
+        add_current_pos(profundidade);
         if (simbolo[current_pos] == "ident" ||simbolo[current_pos] ==  "numero_int" ||simbolo[current_pos] ==  "numero_real" ||simbolo[current_pos] ==  "(")
         {   
-            procedimento_fator(); 
-            add_current_pos();
+            procedimento_fator(profundidade); 
+            add_current_pos(profundidade);
             if (simbolo[current_pos] == "*" || simbolo[current_pos] == "/")
             {
-                procedimento_mais_fatores();
+                procedimento_mais_fatores(profundidade);
                 return;
             }
             else
@@ -737,12 +821,12 @@ void SintaticoPascalCompiler::procedimento_termo()
     
     else if (simbolo[current_pos] == "ident" || simbolo[current_pos] == "numero_int" ||simbolo[current_pos] ==  "numero_real" ||simbolo[current_pos] ==  "(")
     {     
-        procedimento_fator();
-        add_current_pos();
+        procedimento_fator(profundidade);
+        add_current_pos(profundidade);
         
         if (simbolo[current_pos] == "*" || simbolo[current_pos] == "/")
         {
-            procedimento_mais_fatores();
+            procedimento_mais_fatores(profundidade);
             return;
         }
         else
@@ -754,19 +838,20 @@ void SintaticoPascalCompiler::procedimento_termo()
 
 //25. <outros_termos> ::= <op_ad><termo><outros_termos> | λ com
 //26. <op_ad> ::= + | -
-void SintaticoPascalCompiler::procedimento_outros_termos()
+void SintaticoPascalCompiler::procedimento_outros_termos(int profundidade)
 {
+    cout << "--- procedimento_outros_termos() ---" << profundidade << endl;
     if (simbolo[current_pos] == "+" || "-")
     {
-        add_current_pos();
+        add_current_pos(profundidade);
         if (simbolo[current_pos] == "+" || "-" || "ident" || "numero_int" || "numero_real" || "(")
         {
-            procedimento_termo();
+            procedimento_termo(profundidade);
             
-            add_current_pos();
+            add_current_pos(profundidade);
             if (simbolo[current_pos] == "+" || "-")
             {
-                procedimento_outros_termos();
+                procedimento_outros_termos(profundidade);
             }
             else
             {
@@ -786,19 +871,20 @@ void SintaticoPascalCompiler::procedimento_outros_termos()
 
 //28. <mais_fatores> ::= <op_mul> <fator> <mais_fatores> | λ com
 //29. <op_mul> ::= * | /
-void SintaticoPascalCompiler::procedimento_mais_fatores()
+void SintaticoPascalCompiler::procedimento_mais_fatores(int profundidade)
 {
+    cout << "--- procedimento_mais_fatores() ---" << profundidade << endl;
     if (simbolo[current_pos] == "*" || "/")
     {
-        add_current_pos();
+        add_current_pos(profundidade);
         if (simbolo[current_pos] == "ident" || "numero_int" || "numero_real" || "(")
         {   
-            procedimento_fator();
-            add_current_pos();
+            procedimento_fator(profundidade);
+            add_current_pos(profundidade);
             
             if (simbolo[current_pos] == "*" || "/")
             {
-                procedimento_mais_fatores();
+                procedimento_mais_fatores(profundidade);
             }
             else
             {
@@ -819,23 +905,24 @@ void SintaticoPascalCompiler::procedimento_mais_fatores()
 //30. <fator> ::= ident | <numero> | ( <expressao> )
 //31. <numero> ::= numero_int | numero_real
 //23. <expressao> ::= <termo> <outros_termos>
-void SintaticoPascalCompiler::procedimento_fator()
+void SintaticoPascalCompiler::procedimento_fator(int profundidade)
 {   
+    cout << "--- procedimento_fator() ---" << profundidade << endl;
     if (simbolo[current_pos] == "ident" ||simbolo[current_pos] == "numero_int" ||simbolo[current_pos] == "numero_real")
     {
         return;
     }
     else if (simbolo[current_pos] == "(")
     {
-        add_current_pos();
+        add_current_pos(profundidade);
         if (simbolo[current_pos] == "+" ||simbolo[current_pos] == "-" || simbolo[current_pos] =="ident" ||simbolo[current_pos] == "numero_int" || simbolo[current_pos] =="numero_real" || simbolo[current_pos] =="(")
         {
-            procedimento_termo();
-            add_current_pos();
+            procedimento_termo(profundidade);
+            add_current_pos(profundidade);
             if (simbolo[current_pos] == "+" ||simbolo[current_pos] == "-")
             {
-                procedimento_outros_termos();
-                add_current_pos();
+                procedimento_outros_termos(profundidade);
+                add_current_pos(profundidade);
                 if (simbolo[current_pos] == ")")
                 {
                     return;
@@ -848,7 +935,7 @@ void SintaticoPascalCompiler::procedimento_fator()
         }
         else
         {
-            add_current_pos();
+            add_current_pos(profundidade);
             if (simbolo[current_pos] == ")")
             {
                 return;
