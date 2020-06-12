@@ -30,7 +30,7 @@ int SintaticoPascalCompiler::get_current_pos()
 void SintaticoPascalCompiler::ASD(vector<string> symbol)
 {
     set_simbolo(symbol);
-    procedimento_programa(simbolo[0]);
+    procedimento_programa();
 }
 
 string SintaticoPascalCompiler::get_next_simb()
@@ -39,8 +39,8 @@ string SintaticoPascalCompiler::get_next_simb()
     return simbolo[current_pos];
 }
 
-void SintaticoPascalCompiler::procedimento_programa(string symbol)
-{
+void SintaticoPascalCompiler::procedimento_programa()
+{   
     if (symbol == "program")
     {
         symbol = get_next_simb();
@@ -51,7 +51,7 @@ void SintaticoPascalCompiler::procedimento_programa(string symbol)
             {   
                 symbol = get_next_simb();
 
-                procedimento_corpo(symbol);
+                procedimento_corpo();
                 
                 symbol = get_next_simb();
                 if (symbol == ".")
@@ -81,13 +81,13 @@ void SintaticoPascalCompiler::procedimento_programa(string symbol)
 }
 
 //2. <corpo> ::= <dc> begin <comandos> end
-void SintaticoPascalCompiler::procedimento_corpo(string symbol)
+void SintaticoPascalCompiler::procedimento_corpo()
 {   
-    procedimento_dc(symbol);
+    procedimento_dc();
     if (symbol == "begin")
     {   
         symbol = get_next_simb();
-        procedimento_comandos(symbol);
+        procedimento_comandos();
         symbol = get_next_simb();
         if (symbol == "end")
         {
@@ -105,17 +105,17 @@ void SintaticoPascalCompiler::procedimento_corpo(string symbol)
 }
 
 //3. <dc> ::= <dc_c> <dc_v> <dc_p>
-void SintaticoPascalCompiler::procedimento_dc(string symbol)
+void SintaticoPascalCompiler::procedimento_dc()
 {
-    procedimento_dc_c(symbol);
+    procedimento_dc_c();
     //symbol = get_next_simb();
-    procedimento_dc_v(symbol);
+    procedimento_dc_v();
     //symbol = get_next_simb();
-    procedimento_dc_p(symbol);
+    procedimento_dc_p();
 }
 
 //4. <dc_c> ::= const ident = <numero> ; <dc_c> | λ
-void SintaticoPascalCompiler::procedimento_dc_c(string symbol)
+void SintaticoPascalCompiler::procedimento_dc_c()
 {   
     if (symbol == "const")
     {
@@ -126,14 +126,14 @@ void SintaticoPascalCompiler::procedimento_dc_c(string symbol)
             if (symbol == "=")
             {
                 symbol = get_next_simb();
-                procedimento_fator(symbol);
+                procedimento_fator();
                 symbol = get_next_simb();
                 if (symbol == ";")
                 {
                     symbol = get_next_simb();
                     if (symbol == "const")
                     {
-                        procedimento_dc_c(symbol);
+                        procedimento_dc_c();
                     }
                     else
                     {
@@ -162,24 +162,26 @@ void SintaticoPascalCompiler::procedimento_dc_c(string symbol)
 }
 
 //5. <dc_v> ::= var <variaveis> : <tipo_var> ; <dc_v> | λ
-void SintaticoPascalCompiler::procedimento_dc_v(string symbol)
+void SintaticoPascalCompiler::procedimento_dc_v()
 {
     if (symbol == "var")
     {
         symbol = get_next_simb();
-        procedimento_variaveis(symbol);
-        cout <<"AQUII " << symbol << endl;
+        procedimento_variaveis();
+        cout <<"AQUII 2 " << symbol << endl;
+        symbol = get_next_simb();
+        cout <<"AQUII 3 " << symbol << endl;
         if (symbol == ":")
         {
             symbol = get_next_simb();
-            procedimento_tipo_var(symbol);
+            procedimento_tipo_var();
             symbol = get_next_simb();
             if (symbol == ";")
             {
                 symbol = get_next_simb();
                 if (symbol == "var")
                 {
-                    procedimento_dc_v(symbol);
+                    procedimento_dc_v();
                 }
                 else
                 {
@@ -188,7 +190,7 @@ void SintaticoPascalCompiler::procedimento_dc_v(string symbol)
             }
             else
             {
-                cout << "ERRO - não é igual a ;";
+               return; 
             }
         }
         else
@@ -203,7 +205,7 @@ void SintaticoPascalCompiler::procedimento_dc_v(string symbol)
 }
 
 //9. <dc_p> ::= precedure ident <parametros> ; <corpo> <dc_p> | λ
-void SintaticoPascalCompiler::procedimento_dc_p(string symbol)
+void SintaticoPascalCompiler::procedimento_dc_p()
 {
     if (symbol == "procedure")
     {
@@ -211,15 +213,15 @@ void SintaticoPascalCompiler::procedimento_dc_p(string symbol)
         if (symbol == "ident")
         {
             symbol = get_next_simb();
-            procedimento_parametros(symbol);
+            procedimento_parametros();
             symbol = get_next_simb();
             if (symbol == ";")
             {
                 symbol = get_next_simb();
-                procedimento_corpo_p(symbol);
+                procedimento_corpo_p();
                 if (symbol == "procedure")
                 {
-                    procedimento_dc_p(symbol);
+                    procedimento_dc_p();
                 }
                 else
                 {
@@ -243,7 +245,7 @@ void SintaticoPascalCompiler::procedimento_dc_p(string symbol)
 }
 
 //6. <tipo_var> ::= real | integer
-void SintaticoPascalCompiler::procedimento_tipo_var(string symbol)
+void SintaticoPascalCompiler::procedimento_tipo_var()
 {
     if (symbol == "real")
     {
@@ -263,10 +265,10 @@ void SintaticoPascalCompiler::procedimento_tipo_var(string symbol)
 //8. <mais_var> ::= , <variaveis> | λ
 
 //ident ,variaveis
-void SintaticoPascalCompiler::procedimento_variaveis(string symbol)
+void SintaticoPascalCompiler::procedimento_variaveis()
 {
     if (symbol == "ident")
-    {
+    {   
         symbol = get_next_simb();
         
         if (symbol == ",")
@@ -274,7 +276,7 @@ void SintaticoPascalCompiler::procedimento_variaveis(string symbol)
             symbol = get_next_simb();
             if (symbol == "ident")
             {
-                procedimento_variaveis(symbol);
+                procedimento_variaveis();
             }
             else
             {
@@ -282,7 +284,7 @@ void SintaticoPascalCompiler::procedimento_variaveis(string symbol)
             }
         }
         else
-        {   cout <<"AQUII AOBA " <<symbol << endl;
+        {   cout <<"AQUII " << symbol << endl;
             return; //se não for vírgula só sai da função (lambda)
         }
     }
@@ -293,12 +295,12 @@ void SintaticoPascalCompiler::procedimento_variaveis(string symbol)
 }
 
 //10- <parametros> ::= ( <lista_par> ) | lambda
-void SintaticoPascalCompiler::procedimento_parametros(string symbol)
+void SintaticoPascalCompiler::procedimento_parametros()
 {
     if (symbol == "(")
     {
         symbol = get_next_simb();
-        procedimento_lista_par(symbol);
+        procedimento_lista_par();
         symbol = get_next_simb();
         if (symbol == ")")
         {
@@ -317,18 +319,18 @@ void SintaticoPascalCompiler::procedimento_parametros(string symbol)
 
 //11- <lista_par> ::= <variaveis> : <tipo_var> <mais_par>
 //12 -<mais_par> ::= ; <lista_par> | lambda
-void SintaticoPascalCompiler::procedimento_lista_par(string symbol)
+void SintaticoPascalCompiler::procedimento_lista_par()
 {
-    procedimento_variaveis(symbol);
+    procedimento_variaveis();
     symbol = get_next_simb();
     if (symbol == ":")
     {
         symbol = get_next_simb();
-        procedimento_tipo_var(symbol);
+        procedimento_tipo_var();
         symbol = get_next_simb();
         if (symbol == ";")
         {
-            procedimento_lista_par(symbol);
+            procedimento_lista_par();
         }
         else
         {
@@ -343,14 +345,14 @@ void SintaticoPascalCompiler::procedimento_lista_par(string symbol)
 
 //13. <corpo_p> ::= <dc_loc> begin <comandos> end ; com
 //14. <dc_loc> ::= <dc_v>
-void SintaticoPascalCompiler::procedimento_corpo_p(string symbol)
+void SintaticoPascalCompiler::procedimento_corpo_p()
 {
-    procedimento_dc_v(symbol);
+    procedimento_dc_v();
     symbol = get_next_simb();
     if (symbol == "begin")
     {
         symbol = get_next_simb();
-        procedimento_comandos(symbol);
+        procedimento_comandos();
         symbol = get_next_simb();
         if (symbol == "end")
         {
@@ -393,7 +395,7 @@ void SintaticoPascalCompiler::procedimento_corpo_p(string symbol)
 
 //16. <argumentos> ::= ident <mais_ident> com
 //17. <mais_ident> ::= ; <argumentos> | λ
-void SintaticoPascalCompiler::procedimento_argumentos(string symbol)
+void SintaticoPascalCompiler::procedimento_argumentos()
 {
     if (symbol == "ident")
     {
@@ -403,7 +405,7 @@ void SintaticoPascalCompiler::procedimento_argumentos(string symbol)
             symbol = get_next_simb();
             if (symbol == "ident")
             {
-                procedimento_argumentos(symbol);
+                procedimento_argumentos();
             }
             else
             {
@@ -433,7 +435,7 @@ void SintaticoPascalCompiler::procedimento_argumentos(string symbol)
 //}
 
 //19. <comandos> ::= <cmd> ; <comandos> | λ
-void SintaticoPascalCompiler::procedimento_comandos(string symbol)
+void SintaticoPascalCompiler::procedimento_comandos()
 {
     if (symbol == "read" || "write" || "while" || "if" || "ident" || "begin" || "for")
     {
@@ -441,7 +443,7 @@ void SintaticoPascalCompiler::procedimento_comandos(string symbol)
         if (symbol == ";")
         {
             symbol = get_next_simb();
-            procedimento_variaveis(symbol);
+            procedimento_variaveis();
             return;
         }
         else
@@ -466,31 +468,31 @@ void SintaticoPascalCompiler::procedimento_comandos(string symbol)
 //                for <variaveis> := numero_int to numero_int do
 //    <cmd_aux’> ::= := <expressao> | <lista_arg>
 
-void SintaticoPascalCompiler::procedimento_cmd(string symbol)
+void SintaticoPascalCompiler::procedimento_cmd()
 {
     if (symbol == "read")
     {
         symbol = get_next_simb();
-        procedimento_variaveis(symbol);
+        procedimento_variaveis();
         return;
     }
 
     else if (symbol == "write")
     {
         symbol = get_next_simb();
-        procedimento_variaveis(symbol);
+        procedimento_variaveis();
         return;
     }
 
     else if (symbol == "while")
     {
         symbol = get_next_simb();
-        procedimento_condicao(symbol);
+        procedimento_condicao();
         symbol = get_next_simb();
         if (symbol == "do")
         {
             symbol = get_next_simb();
-            procedimento_cmd(symbol);
+            procedimento_cmd();
         }
 
         else if (symbol == "ident")
@@ -502,7 +504,7 @@ void SintaticoPascalCompiler::procedimento_cmd(string symbol)
                 if (symbol == "=")
                 {
                     symbol = get_next_simb();
-                    procedimento_expressao(symbol);
+                    procedimento_expressao();
                     return;
                 }
                 else
@@ -513,7 +515,7 @@ void SintaticoPascalCompiler::procedimento_cmd(string symbol)
             else if (symbol == "(")
             {
                 symbol = get_next_simb();
-                procedimento_argumentos(symbol);
+                procedimento_argumentos();
                 symbol = get_next_simb();
                 if (symbol == ")")
                 {
@@ -533,7 +535,7 @@ void SintaticoPascalCompiler::procedimento_cmd(string symbol)
         else if (symbol == "begin")
         {
             symbol = get_next_simb();
-            procedimento_comandos(symbol);
+            procedimento_comandos();
             symbol = get_next_simb();
             if (symbol == "end")
             {
@@ -548,19 +550,19 @@ void SintaticoPascalCompiler::procedimento_cmd(string symbol)
         else if (symbol == "if")
         {
             symbol = get_next_simb();
-            procedimento_condicao(symbol);
+            procedimento_condicao();
             symbol = get_next_simb();
             if (symbol == "then")
             {
                 symbol = get_next_simb();
                 if (symbol == "read" || "write" || "while" || "if" || "ident" || "begin" || "if" || "for")
                 {
-                    procedimento_cmd(symbol);
+                    procedimento_cmd();
                 }
                 else if (symbol == "else")
                 {
                     symbol = get_next_simb();
-                    procedimento_cmd(symbol);
+                    procedimento_cmd();
                 }
                 else
                 {
@@ -572,7 +574,7 @@ void SintaticoPascalCompiler::procedimento_cmd(string symbol)
         else if (symbol == "for")
         {
             symbol = get_next_simb();
-            procedimento_variaveis(symbol);
+            procedimento_variaveis();
             symbol = get_next_simb();
             if (symbol == ":")
             {
@@ -631,13 +633,13 @@ void SintaticoPascalCompiler::procedimento_cmd(string symbol)
 }
 
 //23. <expressao> ::= <termo> <outros_termos>
-void SintaticoPascalCompiler::procedimento_expressao(string symbol)
+void SintaticoPascalCompiler::procedimento_expressao()
 {
     if(symbol == "+" || "-" || "ident" || "numero_int" || "numero_real" || "("){
-        procedimento_termo(symbol);
+        procedimento_termo();
         symbol = get_next_simb();
         if(symbol == "-" || "+"){
-            procedimento_termo(symbol);
+            procedimento_termo();
             symbol = get_next_simb();
         }else{
             return;
@@ -650,22 +652,22 @@ void SintaticoPascalCompiler::procedimento_expressao(string symbol)
 //21. <condicao> ::= <expressao> <relacao> <expressao>
 //22. <relacao> ::= = | <> | >= | <= | > | <
 //23. <expressao> ::= <termo> <outros_termos>
-void SintaticoPascalCompiler::procedimento_condicao(string symbol)
+void SintaticoPascalCompiler::procedimento_condicao()
 {
     if (symbol == "+" || "-" || "ident" || "numero_int" || "numero_real" || "(")
     {
-        procedimento_termo(symbol);
+        procedimento_termo();
         symbol = get_next_simb();
         if (symbol == "+" || "-")
         {
-            procedimento_outros_termos(symbol);
+            procedimento_outros_termos();
             symbol = get_next_simb();
             if (symbol == "=" || "diferente" || "maior_igual" || "menor_igual" || ">" || "<")
             {
                 symbol = get_next_simb();
                 if (symbol == "+" || "-" || "ident" || "numero_int" || "numero_real" || "(")
                 {
-                    procedimento_condicao(symbol);
+                    procedimento_condicao();
                 }
                 else
                 {
@@ -684,7 +686,7 @@ void SintaticoPascalCompiler::procedimento_condicao(string symbol)
                 symbol = get_next_simb();
                 if (symbol == "+" || "-" || "ident" || "numero_int" || "numero_real" || "(")
                 {
-                    procedimento_condicao(symbol);
+                    procedimento_condicao();
                 }
                 else
                 {
@@ -705,18 +707,18 @@ void SintaticoPascalCompiler::procedimento_condicao(string symbol)
 
 //24. <op_un> ::= + | - | λ com
 //27. <termo> ::= <op_un> <fator> <mais_fatores>
-void SintaticoPascalCompiler::procedimento_termo(string symbol)
+void SintaticoPascalCompiler::procedimento_termo()
 {
     if (symbol == "+" || "-")
     {
         symbol = get_next_simb();
         if (symbol == "ident" || "numero_int" || "numero_real" || "(")
         {
-            procedimento_fator(symbol);
+            procedimento_fator();
             symbol = get_next_simb();
             if (symbol == "*" || "/")
             {
-                procedimento_mais_fatores(symbol);
+                procedimento_mais_fatores();
                 return;
             }
             else
@@ -727,11 +729,11 @@ void SintaticoPascalCompiler::procedimento_termo(string symbol)
     }
     else if (symbol == "ident" || "numero_int" || "numero_real" || "(")
     {
-        procedimento_fator(symbol);
+        procedimento_fator();
         symbol = get_next_simb();
         if (symbol == "*" || "/")
         {
-            procedimento_mais_fatores(symbol);
+            procedimento_mais_fatores();
             return;
         }
         else
@@ -743,18 +745,18 @@ void SintaticoPascalCompiler::procedimento_termo(string symbol)
 
 //25. <outros_termos> ::= <op_ad><termo><outros_termos> | λ com
 //26. <op_ad> ::= + | -
-void SintaticoPascalCompiler::procedimento_outros_termos(string symbol)
+void SintaticoPascalCompiler::procedimento_outros_termos()
 {
     if (symbol == "+" || "-")
     {
         symbol = get_next_simb();
         if (symbol == "+" || "-" || "ident" || "numero_int" || "numero_real" || "(")
         {
-            procedimento_termo(symbol);
+            procedimento_termo();
             symbol = get_next_simb();
             if (symbol == "+" || "-")
             {
-                procedimento_outros_termos(symbol);
+                procedimento_outros_termos();
             }
             else
             {
@@ -774,18 +776,18 @@ void SintaticoPascalCompiler::procedimento_outros_termos(string symbol)
 
 //28. <mais_fatores> ::= <op_mul> <fator> <mais_fatores> | λ com
 //29. <op_mul> ::= * | /
-void SintaticoPascalCompiler::procedimento_mais_fatores(string symbol)
+void SintaticoPascalCompiler::procedimento_mais_fatores()
 {
     if (symbol == "*" || "/")
     {
         symbol = get_next_simb();
         if (symbol == "ident" || "numero_int" || "numero_real" || "(")
         {
-            procedimento_fator(symbol);
+            procedimento_fator();
             symbol = get_next_simb();
             if (symbol == "*" || "/")
             {
-                procedimento_mais_fatores(symbol);
+                procedimento_mais_fatores();
             }
             else
             {
@@ -806,7 +808,7 @@ void SintaticoPascalCompiler::procedimento_mais_fatores(string symbol)
 //30. <fator> ::= ident | <numero> | ( <expressao> )
 //31. <numero> ::= numero_int | numero_real
 //23. <expressao> ::= <termo> <outros_termos>
-void SintaticoPascalCompiler::procedimento_fator(string symbol)
+void SintaticoPascalCompiler::procedimento_fator()
 {
     if (symbol == "ident" || "numero_int" || "numero_real")
     {
@@ -817,11 +819,11 @@ void SintaticoPascalCompiler::procedimento_fator(string symbol)
         symbol = get_next_simb();
         if (symbol == "+" || "-" || "ident" || "numero_int" || "numero_real" || "(")
         {
-            procedimento_termo(symbol);
+            procedimento_termo();
             symbol = get_next_simb();
             if (symbol == "+" || "-")
             {
-                procedimento_outros_termos(symbol);
+                procedimento_outros_termos();
                 symbol = get_next_simb();
                 if (symbol == ")")
                 {
