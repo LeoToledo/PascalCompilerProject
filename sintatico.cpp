@@ -41,7 +41,7 @@ string SintaticoPascalCompiler::get_next_simb()
 
 
 void SintaticoPascalCompiler::procedimento_programa()
-{   cout << "AQUI " << simbolo[current_pos] << endl;
+{   
     if (simbolo[current_pos] == "program")
     {
         add_current_pos();
@@ -170,7 +170,7 @@ void SintaticoPascalCompiler::procedimento_dc_v()
         add_current_pos();
         procedimento_variaveis();
         cout <<"AQUII 2 " << simbolo[current_pos] << endl;
-        add_current_pos();
+        
         cout <<"AQUII 3 " << simbolo[current_pos] << endl;
         if (simbolo[current_pos] == ":")
         {
@@ -285,7 +285,7 @@ void SintaticoPascalCompiler::procedimento_variaveis()
             }
         }
         else
-        {   cout <<"AQUII " << symbol << endl;
+        {   cout <<"AQUII " << simbolo[current_pos] << endl;
             return; //se não for vírgula só sai da função (lambda)
         }
     }
