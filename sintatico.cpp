@@ -29,7 +29,7 @@ int SintaticoPascalCompiler::get_current_pos()
 
 void SintaticoPascalCompiler::ASD(vector<string> symbol)
 {
-    set_simbolo();
+    set_simbolo(symbol);
     procedimento_programa();
 }
 
@@ -39,22 +39,23 @@ string SintaticoPascalCompiler::get_next_simb()
     return simbolo[current_pos];
 }
 
+
 void SintaticoPascalCompiler::procedimento_programa()
-{   cout << "AQUI " << symbol << endl;
-    if (symbol == "program")
+{   cout << "AQUI " << simbolo[current_pos] << endl;
+    if (simbolo[current_pos] == "program")
     {
-        symbol = get_next_simb();
-        if (symbol == "ident")
+        add_current_pos();
+        if (simbolo[current_pos] == "ident")
         {   
-            symbol = get_next_simb();
-            if (symbol == ";")
+            add_current_pos();
+            if (simbolo[current_pos] == ";")
             {   
-                symbol = get_next_simb();
+                add_current_pos();
 
                 procedimento_corpo();
                 
-                symbol = get_next_simb();
-                if (symbol == ".")
+                add_current_pos();
+                if (simbolo[current_pos] == ".")
                 {
                     printf("Sucesso");
                     return;
@@ -84,12 +85,12 @@ void SintaticoPascalCompiler::procedimento_programa()
 void SintaticoPascalCompiler::procedimento_corpo()
 {   
     procedimento_dc();
-    if (symbol == "begin")
+    if (simbolo[current_pos] == "begin")
     {   
-        symbol = get_next_simb();
+        add_current_pos();
         procedimento_comandos();
-        symbol = get_next_simb();
-        if (symbol == "end")
+        add_current_pos();
+        if (simbolo[current_pos] == "end")
         {
             return;
         }
@@ -108,30 +109,30 @@ void SintaticoPascalCompiler::procedimento_corpo()
 void SintaticoPascalCompiler::procedimento_dc()
 {
     procedimento_dc_c();
-    //symbol = get_next_simb();
+    //add_current_pos();
     procedimento_dc_v();
-    //symbol = get_next_simb();
+    //add_current_pos();
     procedimento_dc_p();
 }
 
 //4. <dc_c> ::= const ident = <numero> ; <dc_c> | λ
 void SintaticoPascalCompiler::procedimento_dc_c()
 {   
-    if (symbol == "const")
+    if (simbolo[current_pos] == "const")
     {
-        symbol = get_next_simb();
-        if (symbol == "ident")
+        add_current_pos();
+        if (simbolo[current_pos] == "ident")
         {
-            symbol = get_next_simb();
-            if (symbol == "=")
+            add_current_pos();
+            if (simbolo[current_pos] == "=")
             {
-                symbol = get_next_simb();
+                add_current_pos();
                 procedimento_fator();
-                symbol = get_next_simb();
-                if (symbol == ";")
+                add_current_pos();
+                if (simbolo[current_pos] == ";")
                 {
-                    symbol = get_next_simb();
-                    if (symbol == "const")
+                    add_current_pos();
+                    if (simbolo[current_pos] == "const")
                     {
                         procedimento_dc_c();
                     }
@@ -164,22 +165,22 @@ void SintaticoPascalCompiler::procedimento_dc_c()
 //5. <dc_v> ::= var <variaveis> : <tipo_var> ; <dc_v> | λ
 void SintaticoPascalCompiler::procedimento_dc_v()
 {
-    if (symbol == "var")
+    if (simbolo[current_pos] == "var")
     {
-        symbol = get_next_simb();
+        add_current_pos();
         procedimento_variaveis();
-        cout <<"AQUII 2 " << symbol << endl;
-        symbol = get_next_simb();
-        cout <<"AQUII 3 " << symbol << endl;
-        if (symbol == ":")
+        cout <<"AQUII 2 " << simbolo[current_pos] << endl;
+        add_current_pos();
+        cout <<"AQUII 3 " << simbolo[current_pos] << endl;
+        if (simbolo[current_pos] == ":")
         {
-            symbol = get_next_simb();
+            add_current_pos();
             procedimento_tipo_var();
-            symbol = get_next_simb();
-            if (symbol == ";")
+            add_current_pos();
+            if (simbolo[current_pos] == ";")
             {
-                symbol = get_next_simb();
-                if (symbol == "var")
+                add_current_pos();
+                if (simbolo[current_pos] == "var")
                 {
                     procedimento_dc_v();
                 }
@@ -207,19 +208,19 @@ void SintaticoPascalCompiler::procedimento_dc_v()
 //9. <dc_p> ::= precedure ident <parametros> ; <corpo> <dc_p> | λ
 void SintaticoPascalCompiler::procedimento_dc_p()
 {
-    if (symbol == "procedure")
+    if (simbolo[current_pos] == "procedure")
     {
-        symbol = get_next_simb();
-        if (symbol == "ident")
+        add_current_pos();
+        if (simbolo[current_pos] == "ident")
         {
-            symbol = get_next_simb();
+            add_current_pos();
             procedimento_parametros();
-            symbol = get_next_simb();
-            if (symbol == ";")
+            add_current_pos();
+            if (simbolo[current_pos] == ";")
             {
-                symbol = get_next_simb();
+                add_current_pos();
                 procedimento_corpo_p();
-                if (symbol == "procedure")
+                if (simbolo[current_pos] == "procedure")
                 {
                     procedimento_dc_p();
                 }
@@ -247,13 +248,13 @@ void SintaticoPascalCompiler::procedimento_dc_p()
 //6. <tipo_var> ::= real | integer
 void SintaticoPascalCompiler::procedimento_tipo_var()
 {
-    if (symbol == "real")
+    if (simbolo[current_pos] == "real")
     {
-        symbol = get_next_simb();
+        add_current_pos();
     }
-    else if (symbol == "integer")
+    else if (simbolo[current_pos] == "integer")
     {
-        symbol = get_next_simb();
+        add_current_pos();
     }
     else
     {
@@ -267,14 +268,14 @@ void SintaticoPascalCompiler::procedimento_tipo_var()
 //ident ,variaveis
 void SintaticoPascalCompiler::procedimento_variaveis()
 {
-    if (symbol == "ident")
+    if (simbolo[current_pos] == "ident")
     {   
-        symbol = get_next_simb();
+        add_current_pos();
         
-        if (symbol == ",")
+        if (simbolo[current_pos] == ",")
         {
-            symbol = get_next_simb();
-            if (symbol == "ident")
+            add_current_pos();
+            if (simbolo[current_pos] == "ident")
             {
                 procedimento_variaveis();
             }
@@ -297,12 +298,12 @@ void SintaticoPascalCompiler::procedimento_variaveis()
 //10- <parametros> ::= ( <lista_par> ) | lambda
 void SintaticoPascalCompiler::procedimento_parametros()
 {
-    if (symbol == "(")
+    if (simbolo[current_pos] == "(")
     {
-        symbol = get_next_simb();
+        add_current_pos();
         procedimento_lista_par();
-        symbol = get_next_simb();
-        if (symbol == ")")
+        add_current_pos();
+        if (simbolo[current_pos] == ")")
         {
             return;
         }
@@ -322,13 +323,13 @@ void SintaticoPascalCompiler::procedimento_parametros()
 void SintaticoPascalCompiler::procedimento_lista_par()
 {
     procedimento_variaveis();
-    symbol = get_next_simb();
-    if (symbol == ":")
+    add_current_pos();
+    if (simbolo[current_pos] == ":")
     {
-        symbol = get_next_simb();
+        add_current_pos();
         procedimento_tipo_var();
-        symbol = get_next_simb();
-        if (symbol == ";")
+        add_current_pos();
+        if (simbolo[current_pos] == ";")
         {
             procedimento_lista_par();
         }
@@ -348,16 +349,16 @@ void SintaticoPascalCompiler::procedimento_lista_par()
 void SintaticoPascalCompiler::procedimento_corpo_p()
 {
     procedimento_dc_v();
-    symbol = get_next_simb();
-    if (symbol == "begin")
+    add_current_pos();
+    if (simbolo[current_pos] == "begin")
     {
-        symbol = get_next_simb();
+        add_current_pos();
         procedimento_comandos();
-        symbol = get_next_simb();
-        if (symbol == "end")
+        add_current_pos();
+        if (simbolo[current_pos] == "end")
         {
-            symbol = get_next_simb();
-            if (symbol == ";")
+            add_current_pos();
+            if (simbolo[current_pos] == ";")
             {
                 return;
             }
@@ -397,13 +398,13 @@ void SintaticoPascalCompiler::procedimento_corpo_p()
 //17. <mais_ident> ::= ; <argumentos> | λ
 void SintaticoPascalCompiler::procedimento_argumentos()
 {
-    if (symbol == "ident")
+    if (simbolo[current_pos] == "ident")
     {
-        symbol = get_next_simb();
-        if (symbol == ";")
+        add_current_pos();
+        if (simbolo[current_pos] == ";")
         {
-            symbol = get_next_simb();
-            if (symbol == "ident")
+            add_current_pos();
+            if (simbolo[current_pos] == "ident")
             {
                 procedimento_argumentos();
             }
@@ -437,12 +438,12 @@ void SintaticoPascalCompiler::procedimento_argumentos()
 //19. <comandos> ::= <cmd> ; <comandos> | λ
 void SintaticoPascalCompiler::procedimento_comandos()
 {
-    if (symbol == "read" || "write" || "while" || "if" || "ident" || "begin" || "for")
+    if (simbolo[current_pos] == "read" || "write" || "while" || "if" || "ident" || "begin" || "for")
     {
-        symbol = get_next_simb();
-        if (symbol == ";")
+        add_current_pos();
+        if (simbolo[current_pos] == ";")
         {
-            symbol = get_next_simb();
+            add_current_pos();
             procedimento_variaveis();
             return;
         }
@@ -470,40 +471,40 @@ void SintaticoPascalCompiler::procedimento_comandos()
 
 void SintaticoPascalCompiler::procedimento_cmd()
 {
-    if (symbol == "read")
+    if (simbolo[current_pos] == "read")
     {
-        symbol = get_next_simb();
+        add_current_pos();
         procedimento_variaveis();
         return;
     }
 
-    else if (symbol == "write")
+    else if (simbolo[current_pos] == "write")
     {
-        symbol = get_next_simb();
+        add_current_pos();
         procedimento_variaveis();
         return;
     }
 
-    else if (symbol == "while")
+    else if (simbolo[current_pos] == "while")
     {
-        symbol = get_next_simb();
+        add_current_pos();
         procedimento_condicao();
-        symbol = get_next_simb();
-        if (symbol == "do")
+        add_current_pos();
+        if (simbolo[current_pos] == "do")
         {
-            symbol = get_next_simb();
+            add_current_pos();
             procedimento_cmd();
         }
 
-        else if (symbol == "ident")
+        else if (simbolo[current_pos] == "ident")
         {
-            symbol = get_next_simb();
-            if (symbol == ":")
+            add_current_pos();
+            if (simbolo[current_pos] == ":")
             {
-                symbol = get_next_simb();
-                if (symbol == "=")
+                add_current_pos();
+                if (simbolo[current_pos] == "=")
                 {
-                    symbol = get_next_simb();
+                    add_current_pos();
                     procedimento_expressao();
                     return;
                 }
@@ -512,12 +513,12 @@ void SintaticoPascalCompiler::procedimento_cmd()
                     cout << "ERRO - não é =";
                 }
             }
-            else if (symbol == "(")
+            else if (simbolo[current_pos] == "(")
             {
-                symbol = get_next_simb();
+                add_current_pos();
                 procedimento_argumentos();
-                symbol = get_next_simb();
-                if (symbol == ")")
+                add_current_pos();
+                if (simbolo[current_pos] == ")")
                 {
                     return;
                 }
@@ -532,12 +533,12 @@ void SintaticoPascalCompiler::procedimento_cmd()
             }
         }
 
-        else if (symbol == "begin")
+        else if (simbolo[current_pos] == "begin")
         {
-            symbol = get_next_simb();
+            add_current_pos();
             procedimento_comandos();
-            symbol = get_next_simb();
-            if (symbol == "end")
+            add_current_pos();
+            if (simbolo[current_pos] == "end")
             {
                 return;
             }
@@ -547,21 +548,21 @@ void SintaticoPascalCompiler::procedimento_cmd()
             }
         }
 
-        else if (symbol == "if")
+        else if (simbolo[current_pos] == "if")
         {
-            symbol = get_next_simb();
+            add_current_pos();
             procedimento_condicao();
-            symbol = get_next_simb();
-            if (symbol == "then")
+            add_current_pos();
+            if (simbolo[current_pos] == "then")
             {
-                symbol = get_next_simb();
-                if (symbol == "read" || "write" || "while" || "if" || "ident" || "begin" || "if" || "for")
+                add_current_pos();
+                if (simbolo[current_pos] == "read" || "write" || "while" || "if" || "ident" || "begin" || "if" || "for")
                 {
                     procedimento_cmd();
                 }
-                else if (symbol == "else")
+                else if (simbolo[current_pos] == "else")
                 {
-                    symbol = get_next_simb();
+                    add_current_pos();
                     procedimento_cmd();
                 }
                 else
@@ -571,27 +572,27 @@ void SintaticoPascalCompiler::procedimento_cmd()
             }
         }
 
-        else if (symbol == "for")
+        else if (simbolo[current_pos] == "for")
         {
-            symbol = get_next_simb();
+            add_current_pos();
             procedimento_variaveis();
-            symbol = get_next_simb();
-            if (symbol == ":")
+            add_current_pos();
+            if (simbolo[current_pos] == ":")
             {
-                symbol = get_next_simb();
-                if (symbol == "=")
+                add_current_pos();
+                if (simbolo[current_pos] == "=")
                 {
-                    symbol = get_next_simb();
-                    if (symbol == "numero_int")
+                    add_current_pos();
+                    if (simbolo[current_pos] == "numero_int")
                     {
-                        symbol = get_next_simb();
-                        if (symbol == "to")
+                        add_current_pos();
+                        if (simbolo[current_pos] == "to")
                         {
-                            symbol = get_next_simb();
-                            if (symbol == "numero_int")
+                            add_current_pos();
+                            if (simbolo[current_pos] == "numero_int")
                             {
-                                symbol = get_next_simb();
-                                if (symbol == "do")
+                                add_current_pos();
+                                if (simbolo[current_pos] == "do")
                                 {
                                     return;
                                 }
@@ -635,12 +636,12 @@ void SintaticoPascalCompiler::procedimento_cmd()
 //23. <expressao> ::= <termo> <outros_termos>
 void SintaticoPascalCompiler::procedimento_expressao()
 {
-    if(symbol == "+" || "-" || "ident" || "numero_int" || "numero_real" || "("){
+    if(simbolo[current_pos] == "+" || "-" || "ident" || "numero_int" || "numero_real" || "("){
         procedimento_termo();
-        symbol = get_next_simb();
-        if(symbol == "-" || "+"){
+        add_current_pos();
+        if(simbolo[current_pos] == "-" || "+"){
             procedimento_termo();
-            symbol = get_next_simb();
+            add_current_pos();
         }else{
             return;
         }
@@ -654,18 +655,18 @@ void SintaticoPascalCompiler::procedimento_expressao()
 //23. <expressao> ::= <termo> <outros_termos>
 void SintaticoPascalCompiler::procedimento_condicao()
 {
-    if (symbol == "+" || "-" || "ident" || "numero_int" || "numero_real" || "(")
+    if (simbolo[current_pos] == "+" || "-" || "ident" || "numero_int" || "numero_real" || "(")
     {
         procedimento_termo();
-        symbol = get_next_simb();
-        if (symbol == "+" || "-")
+        add_current_pos();
+        if (simbolo[current_pos] == "+" || "-")
         {
             procedimento_outros_termos();
-            symbol = get_next_simb();
-            if (symbol == "=" || "diferente" || "maior_igual" || "menor_igual" || ">" || "<")
+            add_current_pos();
+            if (simbolo[current_pos] == "=" || "diferente" || "maior_igual" || "menor_igual" || ">" || "<")
             {
-                symbol = get_next_simb();
-                if (symbol == "+" || "-" || "ident" || "numero_int" || "numero_real" || "(")
+                add_current_pos();
+                if (simbolo[current_pos] == "+" || "-" || "ident" || "numero_int" || "numero_real" || "(")
                 {
                     procedimento_condicao();
                 }
@@ -681,10 +682,10 @@ void SintaticoPascalCompiler::procedimento_condicao()
         }
         else
         {
-            if (symbol == "=" || "diferente" || "maior_igual" || "menor_igual" || ">" || "<")
+            if (simbolo[current_pos] == "=" || "diferente" || "maior_igual" || "menor_igual" || ">" || "<")
             {
-                symbol = get_next_simb();
-                if (symbol == "+" || "-" || "ident" || "numero_int" || "numero_real" || "(")
+                add_current_pos();
+                if (simbolo[current_pos] == "+" || "-" || "ident" || "numero_int" || "numero_real" || "(")
                 {
                     procedimento_condicao();
                 }
@@ -709,14 +710,14 @@ void SintaticoPascalCompiler::procedimento_condicao()
 //27. <termo> ::= <op_un> <fator> <mais_fatores>
 void SintaticoPascalCompiler::procedimento_termo()
 {
-    if (symbol == "+" || "-")
+    if (simbolo[current_pos] == "+" || "-")
     {
-        symbol = get_next_simb();
-        if (symbol == "ident" || "numero_int" || "numero_real" || "(")
+        add_current_pos();
+        if (simbolo[current_pos] == "ident" || "numero_int" || "numero_real" || "(")
         {
             procedimento_fator();
-            symbol = get_next_simb();
-            if (symbol == "*" || "/")
+            add_current_pos();
+            if (simbolo[current_pos] == "*" || "/")
             {
                 procedimento_mais_fatores();
                 return;
@@ -727,11 +728,11 @@ void SintaticoPascalCompiler::procedimento_termo()
             }
         }
     }
-    else if (symbol == "ident" || "numero_int" || "numero_real" || "(")
+    else if (simbolo[current_pos] == "ident" || "numero_int" || "numero_real" || "(")
     {
         procedimento_fator();
-        symbol = get_next_simb();
-        if (symbol == "*" || "/")
+        add_current_pos();
+        if (simbolo[current_pos] == "*" || "/")
         {
             procedimento_mais_fatores();
             return;
@@ -747,14 +748,14 @@ void SintaticoPascalCompiler::procedimento_termo()
 //26. <op_ad> ::= + | -
 void SintaticoPascalCompiler::procedimento_outros_termos()
 {
-    if (symbol == "+" || "-")
+    if (simbolo[current_pos] == "+" || "-")
     {
-        symbol = get_next_simb();
-        if (symbol == "+" || "-" || "ident" || "numero_int" || "numero_real" || "(")
+        add_current_pos();
+        if (simbolo[current_pos] == "+" || "-" || "ident" || "numero_int" || "numero_real" || "(")
         {
             procedimento_termo();
-            symbol = get_next_simb();
-            if (symbol == "+" || "-")
+            add_current_pos();
+            if (simbolo[current_pos] == "+" || "-")
             {
                 procedimento_outros_termos();
             }
@@ -778,14 +779,14 @@ void SintaticoPascalCompiler::procedimento_outros_termos()
 //29. <op_mul> ::= * | /
 void SintaticoPascalCompiler::procedimento_mais_fatores()
 {
-    if (symbol == "*" || "/")
+    if (simbolo[current_pos] == "*" || "/")
     {
-        symbol = get_next_simb();
-        if (symbol == "ident" || "numero_int" || "numero_real" || "(")
+        add_current_pos();
+        if (simbolo[current_pos] == "ident" || "numero_int" || "numero_real" || "(")
         {
             procedimento_fator();
-            symbol = get_next_simb();
-            if (symbol == "*" || "/")
+            add_current_pos();
+            if (simbolo[current_pos] == "*" || "/")
             {
                 procedimento_mais_fatores();
             }
@@ -810,22 +811,22 @@ void SintaticoPascalCompiler::procedimento_mais_fatores()
 //23. <expressao> ::= <termo> <outros_termos>
 void SintaticoPascalCompiler::procedimento_fator()
 {
-    if (symbol == "ident" || "numero_int" || "numero_real")
+    if (simbolo[current_pos] == "ident" || "numero_int" || "numero_real")
     {
         return;
     }
-    else if (symbol == "(")
+    else if (simbolo[current_pos] == "(")
     {
-        symbol = get_next_simb();
-        if (symbol == "+" || "-" || "ident" || "numero_int" || "numero_real" || "(")
+        add_current_pos();
+        if (simbolo[current_pos] == "+" || "-" || "ident" || "numero_int" || "numero_real" || "(")
         {
             procedimento_termo();
-            symbol = get_next_simb();
-            if (symbol == "+" || "-")
+            add_current_pos();
+            if (simbolo[current_pos] == "+" || "-")
             {
                 procedimento_outros_termos();
-                symbol = get_next_simb();
-                if (symbol == ")")
+                add_current_pos();
+                if (simbolo[current_pos] == ")")
                 {
                     return;
                 }
@@ -837,8 +838,8 @@ void SintaticoPascalCompiler::procedimento_fator()
         }
         else
         {
-            symbol = get_next_simb();
-            if (symbol == ")")
+            add_current_pos();
+            if (simbolo[current_pos] == ")")
             {
                 return;
             }

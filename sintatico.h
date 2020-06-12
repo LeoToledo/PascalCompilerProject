@@ -31,6 +31,7 @@ namespace sintatico
 
             //Pega o proximo simbolo sendo analisado
             string get_next_simb();
+
             //Seta o simbolo atual sendo analisado
             void set_simbolo(vector<string> simb);
             //Pega o valor do simbolo atual sendo analisado
