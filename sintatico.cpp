@@ -734,7 +734,7 @@ void SintaticoPascalCompiler::procedimento_expressao(int profundidade)
     }
     else
     {
-        printf("ERRO - não é + || - || ident || numero_int || numero_real || ( ");
+        cout<< "ERRO - não é + || - || ident || numero_int || numero_real || (";
     }
 }
 
@@ -744,55 +744,18 @@ void SintaticoPascalCompiler::procedimento_expressao(int profundidade)
 void SintaticoPascalCompiler::procedimento_condicao(int profundidade)
 {
     cout << "--- procedimento_condicao() ---" << profundidade << endl;
-    if (simbolo[current_pos] == "+" || "-" || "ident" || "numero_int" || "numero_real" || "(")
+    procedimento_expressao(profundidade);
+    if (simbolo[current_pos] == "=" || simbolo[current_pos] == "<>" ||simbolo[current_pos] ==  ">=" ||simbolo[current_pos] ==  "<=" ||simbolo[current_pos] ==  ">" ||simbolo[current_pos] ==  "<")
     {
-        procedimento_termo(profundidade);
         add_current_pos(profundidade);
-        if (simbolo[current_pos] == "+" || "-")
-        {
-            procedimento_outros_termos(profundidade);
-            add_current_pos(profundidade);
-            if (simbolo[current_pos] == "=" || "diferente" || "maior_igual" || "menor_igual" || ">" || "<")
-            {
-                add_current_pos(profundidade);
-                if (simbolo[current_pos] == "+" || "-" || "ident" || "numero_int" || "numero_real" || "(")
-                {
-                    procedimento_condicao(profundidade);
-                }
-                else
-                {
-                    return;
-                }
-            }
-            else
-            {
-                cout << "ERRO - não é igual a = || diferente || maior_igual || menor_igual || > || <" << endl;
-            }
-        }
-        else
-        {
-            if (simbolo[current_pos] == "=" || "diferente" || "maior_igual" || "menor_igual" || ">" || "<")
-            {
-                add_current_pos(profundidade);
-                if (simbolo[current_pos] == "+" || "-" || "ident" || "numero_int" || "numero_real" || "(")
-                {
-                    procedimento_condicao(profundidade);
-                }
-                else
-                {
-                    return;
-                }
-            }
-            else
-            {
-                cout << "ERRO - não é igual a = || diferente || maior_igual || menor_igual || > || <" << endl;
-            }
-        }
+        procedimento_expressao(profundidade);
+        return;
     }
     else
     {
-        cout << "ERRO - não é igual a + || - || ident || numero_int || numero_real || (" << endl;
+        cout << "ERRO - não é igual a  = | <> | >= | <= | > | <" << endl;
     }
+    
 }
 
 //24. <op_un> ::= + | - | λ com
@@ -915,36 +878,54 @@ void SintaticoPascalCompiler::procedimento_fator(int profundidade)
     else if (simbolo[current_pos] == "(")
     {
         add_current_pos(profundidade);
-        if (simbolo[current_pos] == "+" ||simbolo[current_pos] == "-" || simbolo[current_pos] =="ident" ||simbolo[current_pos] == "numero_int" || simbolo[current_pos] =="numero_real" || simbolo[current_pos] =="(")
+        
+        add_current_pos(profundidade);
+        
+        if(simbolo[current_pos] == ")")
         {
-            procedimento_termo(profundidade);
-            add_current_pos(profundidade);
-            if (simbolo[current_pos] == "+" ||simbolo[current_pos] == "-")
-            {
-                procedimento_outros_termos(profundidade);
-                add_current_pos(profundidade);
-                if (simbolo[current_pos] == ")")
-                {
-                    return;
-                }
-                else
-                {
-                    cout << "ERRO - não é )";
-                }
-            }
+            //cout << "ANTES TINHA " << simbolo[current_pos] << endl;
+            //add_current_pos(profundidade);
+            //cout << "DEPOIS TEM " << simbolo[current_pos] << endl;
+            return;
         }
-        else
-        {
-            add_current_pos(profundidade);
-            if (simbolo[current_pos] == ")")
-            {
-                return;
-            }
-            else
-            {
-                cout << "ERRO - não é )";
-            }
-        }
+        // if (simbolo[current_pos] == "+" ||simbolo[current_pos] == "-" || simbolo[current_pos] =="ident" ||simbolo[current_pos] == "numero_int" || simbolo[current_pos] =="numero_real" || simbolo[current_pos] =="(")
+        // {
+        //     procedimento_termo(profundidade);
+        //     add_current_pos(profundidade);
+        //     if (simbolo[current_pos] == "+" ||simbolo[current_pos] == "-")
+        //     {
+        //         procedimento_outros_termos(profundidade);
+        //         add_current_pos(profundidade);
+        //         if (simbolo[current_pos] == ")")
+        //         {
+        //             return;
+        //         }
+        //         else
+        //         {
+        //             cout << "ERRO - não é )"<< endl;
+        //         }
+        //     }
+        //     else if (simbolo[current_pos] == ")")
+        //     {
+        //         return;
+        //     }
+        //     else
+        //     {
+        //         cout << "ERRO - não é ) aqui" << endl;
+        //     }    
+        // }
+        // else
+        // {
+        //     add_current_pos(profundidade);
+        //     if (simbolo[current_pos] == ")")
+        //     {
+        //         return;
+        //     }
+        //     else
+        //     {
+        //         cout << "ERRO - não é )";
+        //     }
+        // }
     }
     else
     {
