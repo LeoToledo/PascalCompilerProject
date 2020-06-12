@@ -29,7 +29,7 @@ int SintaticoPascalCompiler::get_current_pos()
 
 void SintaticoPascalCompiler::ASD(vector<string> symbol)
 {
-    set_simbolo(symbol);
+    set_simbolo();
     procedimento_programa();
 }
 
@@ -40,7 +40,7 @@ string SintaticoPascalCompiler::get_next_simb()
 }
 
 void SintaticoPascalCompiler::procedimento_programa()
-{   
+{   cout << "AQUI " << symbol << endl;
     if (symbol == "program")
     {
         symbol = get_next_simb();

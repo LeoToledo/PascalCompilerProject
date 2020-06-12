@@ -23,14 +23,6 @@ namespace sintatico
             
         public:
             string symbol="";   
-            void set_symbol(string simb)
-            {
-                symbol = simb; 
-            }
-            string get_symbol()
-            {
-                return symbol;
-            }
 
             //Pega a posição atual do simbolo sendo analisado
             int get_current_pos();
