@@ -15,14 +15,17 @@ namespace sintatico
     class SintaticoPascalCompiler
     {
         private:
-            vector<string> simbolo; 
             
 
             //Variável que guarda a posição corrente sendo analisada na fase sintática
             int current_pos = 0;
             
         public:
-            string symbol="";  
+            string symbol="";
+
+            vector<string> simbolo;
+            vector<string> buffer_erro;   
+            vector<int> linha_atual;
 
             //Pega a posição atual do simbolo sendo analisado
             int get_current_pos();
@@ -41,7 +44,7 @@ namespace sintatico
             }
 
             //Função que inicializa o analisador sintático
-            void ASD(vector<string> symbol);
+            void ASD();
 
             //Implementação do grafo sintático da regra de programa
             //Todos os métodos "procedimento" tem a mesma função
@@ -105,6 +108,7 @@ namespace sintatico
 
 
             //18. <pfalsa> ::= else <cmd> | λ
+            void procedimento_pfalsa(int profundidade);
             //int procedimento_pfalsa(simbolo){
             //    if(simbolo == "else"){
             //        simbolo = get_next_simb(posicao_corrente);
@@ -153,6 +157,9 @@ namespace sintatico
             //31. <numero> ::= numero_int | numero_real
             //23. <expressao> ::= <termo> <outros_termos>
             void procedimento_fator(int profundidade);
+            
+            //Procedimento para tratamento de erros
+            void procedimento_ERRO(vector<string> seguidor, vector<string> seguidor_pai, int linha_atual);
 
             
 

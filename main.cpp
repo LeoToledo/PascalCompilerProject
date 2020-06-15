@@ -52,8 +52,9 @@ int main(int argc, char const *argv[])
                 //Condicional para pegar um novo simbolo a cada iteração
                 if(lexico.buffer_id.size() != size_anterior)
                 {
-                    simbolo.push_back(lexico.buffer_token[i]);
-                    //cout << lexico.buffer_token[i] << endl;
+                    sintatico.simbolo.push_back(lexico.buffer_token[i]);
+                    sintatico.linha_atual.push_back(lexico.linha_atual);
+                    cout << sintatico.simbolo[i] << " " << sintatico.linha_atual[i] << endl;
                     i++;
                 } 
             }
@@ -66,11 +67,7 @@ int main(int argc, char const *argv[])
                 outputFile << lexico.buffer_id[i] << ", " << lexico.buffer_token[i] << endl;
             }
             
-            //################################################################################################
-            //###########################################SINTATICO############################################
-            //################################################################################################
-            
-            sintatico.ASD(simbolo);
+            sintatico.ASD();
 
            
         }

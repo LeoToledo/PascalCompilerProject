@@ -13,6 +13,7 @@ while
 if
 ident
 do
+to
 for
 ;
 .
