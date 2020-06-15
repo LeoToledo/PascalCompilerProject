@@ -159,10 +159,7 @@ namespace sintatico
             void procedimento_fator(int profundidade);
             
             //Procedimento para tratamento de erros
-            void procedimento_ERRO(vector<string> seguidor, vector<string> seguidor_pai, int linha_atual);
-
-            
-
+            void procedimento_ERRO(vector<string> seguidor, vector<string> seguidor_pai, int linha_atual, string MSG_ERRO);
     };
 }
 

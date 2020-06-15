@@ -54,7 +54,7 @@ int main(int argc, char const *argv[])
                 {
                     sintatico.simbolo.push_back(lexico.buffer_token[i]);
                     sintatico.linha_atual.push_back(lexico.linha_atual);
-                    cout << sintatico.simbolo[i] << " " << sintatico.linha_atual[i] << endl;
+                    //cout << sintatico.simbolo[i] << " " << sintatico.linha_atual[i] << endl;
                     i++;
                 } 
             }
@@ -68,6 +68,13 @@ int main(int argc, char const *argv[])
             }
             
             sintatico.ASD();
+            
+            cout << "\n\nVETOR ERRO" << endl;
+            for (int i = 0; i < sintatico.buffer_erro.size(); i++)
+            {
+                cout << sintatico.buffer_erro[i] << endl;
+            }
+            
 
            
         }
