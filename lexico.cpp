@@ -342,7 +342,7 @@ int LexicoPascalCompiler::indentificador_automaton()
           return -2;
         }
         buffer_id.push_back(aux_string);
-        buffer_token.push_back("ident");
+        buffer_token.push_back("id");
       }
       else
       {
@@ -359,7 +359,7 @@ int LexicoPascalCompiler::indentificador_automaton()
       {
         //aux_string += programa[indice];
         //buffer_id.push_back(aux_string);
-        //buffer_token.push_back("ident");
+        //buffer_token.push_back("id");
       }
       else
       {

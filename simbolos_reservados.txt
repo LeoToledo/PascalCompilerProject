@@ -11,9 +11,7 @@ read
 write
 while
 if
-ident
 do
-to
 for
 ;
 .
@@ -34,3 +32,4 @@ for
 }
 (
 )
+then
