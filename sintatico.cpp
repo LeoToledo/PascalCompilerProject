@@ -742,6 +742,7 @@ void SintaticoPascalCompiler::procedimento_condicao(int profundidade)
     {
         cout << "Erro no procedimento_condicao, não é  = | <> | >= | <= | > | <, e sim:   " << simbolo[current_pos] << endl;
     }
+    
 }
 
 //24. <op_un> ::= + | - | λ com
