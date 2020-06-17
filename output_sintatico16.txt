@@ -1,0 +1,1 @@
+Erro sintático:  “ to “ esperado no comando for da linha 7

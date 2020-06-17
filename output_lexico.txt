@@ -1,5 +1,5 @@
 program, simb_program
-p, id
+teste17, id
 ;, simb_pv
 const, simb_const
 x, id
@@ -8,7 +8,6 @@ x, id
 ;, simb_pv
 begin, simb_begin
 x, id
-:=, simb_atrib
 1, numero_int
 ;, simb_pv
 while, simb_while
@@ -34,7 +33,6 @@ do, simb_do
 x, id
 :=, simb_atrib
 x, id
-/, simb_div
 1, numero_int
 ;, simb_pv
 end, simb_end

@@ -8,4 +8,5 @@ begin
 write(a);
 a:=a+1;
 end;
+begin
 end.

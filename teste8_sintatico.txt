@@ -1,0 +1,13 @@
+program ; 
+var a, b, c: integer; 
+begin {2}
+read(a,b);
+while (b>a) do
+begin
+write(a);
+a:=a+1;
+end;
+begin
+write(z);
+end;
+end.

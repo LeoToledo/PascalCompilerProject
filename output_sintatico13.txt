@@ -1,0 +1,1 @@
+Erro sintático: read | write | while | begin | for | if | id esperado na linha 5

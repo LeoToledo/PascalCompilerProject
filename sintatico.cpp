@@ -19,10 +19,10 @@ void SintaticoPascalCompiler::set_simbolo(vector<string> simb)
     }
 }
 
-void SintaticoPascalCompiler::add_current_pos(int profundidade)
+void SintaticoPascalCompiler::add_current_pos()
 {
     current_pos++;
-    //cout << simbolo[current_pos] << " " << profundidade << endl;
+    //cout << simbolo[current_pos] << " " <<  << endl;
 }
 int SintaticoPascalCompiler::get_current_pos()
 {
@@ -31,24 +31,23 @@ int SintaticoPascalCompiler::get_current_pos()
 
 void SintaticoPascalCompiler::ASD()
 {
-    int profundidade = 0;
-    procedimento_programa(profundidade);
+    procedimento_programa();
 }
 
 string SintaticoPascalCompiler::get_next_simb()
 {
-    //add_current_pos(profundidade);
+    //add_current_pos();
     return simbolo[current_pos];
 }
 
-void SintaticoPascalCompiler::procedimento_programa(int profundidade)
+void SintaticoPascalCompiler::procedimento_programa()
 {
-    //cout << "--- procedimento_programa() --- " << profundidade << endl;
-    profundidade++;
+    //cout << "--- procedimento_programa() --- " <<  << endl;
+    
 
     if (simbolo[current_pos] == "simb_program")
     {
-        add_current_pos(profundidade);
+        add_current_pos();
     }
     else
     {
@@ -59,7 +58,7 @@ void SintaticoPascalCompiler::procedimento_programa(int profundidade)
     }
     if (simbolo[current_pos] == "id")
     {
-        add_current_pos(profundidade);
+        add_current_pos();
     }
     else
     {
@@ -70,7 +69,7 @@ void SintaticoPascalCompiler::procedimento_programa(int profundidade)
     }
     if (simbolo[current_pos] == "simb_pv")
     {
-        add_current_pos(profundidade);
+        add_current_pos();
     }
     else
     {
@@ -83,10 +82,9 @@ void SintaticoPascalCompiler::procedimento_programa(int profundidade)
         vector<string> seguidor_pai = {""};
         procedimento_ERRO(seguidor, seguidor_pai, linha_atual[current_pos], "Erro sintático:  “ ; “ esperado na linha  " + to_string(linha_atual[current_pos]));
     }
-    procedimento_corpo(profundidade);
+    procedimento_corpo();
     if (simbolo[current_pos] == "simb_p")
     {
-        printf("Sucesso");
         return;
     }
     else
@@ -99,15 +97,15 @@ void SintaticoPascalCompiler::procedimento_programa(int profundidade)
 }
 
 //2. <corpo> ::= <dc> begin <comandos> end
-void SintaticoPascalCompiler::procedimento_corpo(int profundidade)
+void SintaticoPascalCompiler::procedimento_corpo()
 {
-    //cout << "--- procedimento_corpo() ---" << profundidade << endl;
-    profundidade++;
-    procedimento_dc(profundidade);
+    //cout << "--- procedimento_corpo() ---" <<  << endl;
+    
+    procedimento_dc();
 
     if (simbolo[current_pos] == "simb_begin")
     {
-        add_current_pos(profundidade);
+        add_current_pos();
     }
     else
     {
@@ -117,7 +115,7 @@ void SintaticoPascalCompiler::procedimento_corpo(int profundidade)
             vector<string> seguidor = {"simb_read", "simb_write", "simb_while", "simb_begin", "simb_if", "simb_for", "simb_end"};
             vector<string> seguidor_pai = {"simb_p"};
             procedimento_ERRO(seguidor, seguidor_pai, linha_atual[current_pos], "Erro sintático: “var“, “const“ ou “procedure“ esperado na linha " + to_string(linha_atual[current_pos]));
-            add_current_pos(0);
+            add_current_pos();
         }
         else
         {
@@ -132,10 +130,10 @@ void SintaticoPascalCompiler::procedimento_corpo(int profundidade)
         vector<string> seguidor_pai = {"simb_p"};
         procedimento_ERRO(seguidor, seguidor_pai, linha_atual[current_pos], "Erro sintático: “ begin “ esperado na linha " + to_string(linha_atual[current_pos]));*/
     }
-    procedimento_comandos(profundidade);
+    procedimento_comandos();
     if (simbolo[current_pos] == "simb_end")
     {
-        add_current_pos(profundidade);
+        add_current_pos();
         //cout << "Retornou do corpo" << endl;
         return;
     }
@@ -143,7 +141,7 @@ void SintaticoPascalCompiler::procedimento_corpo(int profundidade)
     {
         if(current_pos < simbolo.size()-1)
         {
-            add_current_pos(0);
+            add_current_pos();
         }
         if(simbolo[current_pos] == "simb_p")
         {
@@ -158,35 +156,35 @@ void SintaticoPascalCompiler::procedimento_corpo(int profundidade)
             vector<string> seguidor = {"simb_p"};
             vector<string> seguidor_pai = {"simb_p"};
             procedimento_ERRO(seguidor, seguidor_pai, linha_atual[current_pos], "Erro sintático: read | write | while | begin | for | if | id esperado na linha " + to_string(linha_atual[current_pos]));   
-            add_current_pos(0);
+            add_current_pos();
         }
     }
 }
 
 //3. <dc> ::= <dc_c> <dc_v> <dc_p>
-void SintaticoPascalCompiler::procedimento_dc(int profundidade)
+void SintaticoPascalCompiler::procedimento_dc()
 {
-    //cout << "--- procedimento_dc() ---" << profundidade << endl;
-    profundidade++;
-    procedimento_dc_c(profundidade);
-    //add_current_pos(profundidade);
-    procedimento_dc_v(profundidade);
-    //add_current_pos(profundidade);
-    procedimento_dc_p(profundidade);
+    //cout << "--- procedimento_dc() ---" <<  << endl;
+    
+    procedimento_dc_c();
+    //add_current_pos();
+    procedimento_dc_v();
+    //add_current_pos();
+    procedimento_dc_p();
 }
 
 //4. <dc_c> ::= const id = <numero> ; <dc_c> | λ
-void SintaticoPascalCompiler::procedimento_dc_c(int profundidade)
+void SintaticoPascalCompiler::procedimento_dc_c()
 {
-    //cout << "--- procedimento_dc_c() ---" << profundidade << endl;
-    profundidade++;
+    //cout << "--- procedimento_dc_c() ---" <<  << endl;
+    
     if (simbolo[current_pos] == "simb_const")
     {
-        add_current_pos(profundidade);
+        add_current_pos();
 
         if (simbolo[current_pos] == "id")
         {
-            add_current_pos(profundidade);
+            add_current_pos();
         }
         else
         {
@@ -198,7 +196,7 @@ void SintaticoPascalCompiler::procedimento_dc_c(int profundidade)
 
         if (simbolo[current_pos] == "simb_igual")
         {
-            add_current_pos(profundidade);
+            add_current_pos();
         }
         else
         {
@@ -207,10 +205,10 @@ void SintaticoPascalCompiler::procedimento_dc_c(int profundidade)
             vector<string> seguidor_pai = {"simb_var", "simb_procedure", "simb_begin"};
             procedimento_ERRO(seguidor, seguidor_pai, linha_atual[current_pos], "Erro sintático: “ = “ esperado na linha " + to_string(linha_atual[current_pos]));
         }
-        procedimento_fator(profundidade);
+        procedimento_fator();
         if (simbolo[current_pos] == "simb_pv")
         {
-            add_current_pos(profundidade);
+            add_current_pos();
         }
         else
         {
@@ -219,7 +217,7 @@ void SintaticoPascalCompiler::procedimento_dc_c(int profundidade)
             vector<string> seguidor_pai = {"simb_var", "simb_procedure", "simb_begin"};
             procedimento_ERRO(seguidor, seguidor_pai, linha_atual[current_pos], "Erro sintático: “ ; “ esperado na linha " + to_string(linha_atual[current_pos]));
         }
-        procedimento_dc_c(profundidade);
+        procedimento_dc_c();
     }
     else
     {
@@ -228,19 +226,19 @@ void SintaticoPascalCompiler::procedimento_dc_c(int profundidade)
 }
 
 //5. <dc_v> ::= var <variaveis> : <tipo_var> ; <dc_v> | λ
-void SintaticoPascalCompiler::procedimento_dc_v(int profundidade)
+void SintaticoPascalCompiler::procedimento_dc_v()
 {
-    //cout << "--- procedimento_dc_v() ---" << profundidade << endl;
-    profundidade++;
+    //cout << "--- procedimento_dc_v() ---" <<  << endl;
+    
     if (simbolo[current_pos] == "simb_var")
     {
-        add_current_pos(profundidade);
+        add_current_pos();
 
-        procedimento_variaveis(profundidade);
+        procedimento_variaveis();
 
         if (simbolo[current_pos] == "simb_dp")
         {
-            add_current_pos(profundidade);
+            add_current_pos();
         }
         else
         {
@@ -249,10 +247,10 @@ void SintaticoPascalCompiler::procedimento_dc_v(int profundidade)
             vector<string> seguidor_pai = {"simb_procedure", "simb_begin"};
             procedimento_ERRO(seguidor, seguidor_pai, linha_atual[current_pos], "Erro sintático: “ : “ esperado na linha " + to_string(linha_atual[current_pos]));
         }
-        procedimento_tipo_var(profundidade);
+        procedimento_tipo_var();
         if (simbolo[current_pos] == "simb_pv")
         {
-            add_current_pos(profundidade);
+            add_current_pos();
         }
         else
         {
@@ -261,7 +259,7 @@ void SintaticoPascalCompiler::procedimento_dc_v(int profundidade)
             vector<string> seguidor_pai = {"simb_procedure", "simb_begin"};
             procedimento_ERRO(seguidor, seguidor_pai, linha_atual[current_pos], "Erro sintático: “ ; “ esperado na linha " + to_string(linha_atual[current_pos]));
         }
-        procedimento_dc_v(profundidade);
+        procedimento_dc_v();
     }
     else
     {
@@ -270,18 +268,18 @@ void SintaticoPascalCompiler::procedimento_dc_v(int profundidade)
 }
 
 //9. <dc_p> ::= precedure id <parametros> ; <corpo> <dc_p> | λ
-void SintaticoPascalCompiler::procedimento_dc_p(int profundidade)
+void SintaticoPascalCompiler::procedimento_dc_p()
 {
-    //cout << "--- procedimento_dc_p() ---" << profundidade << endl;
-    profundidade++;
+    //cout << "--- procedimento_dc_p() ---" <<  << endl;
+    
 
     if (simbolo[current_pos] == "simb_procedure")
     {
-        add_current_pos(profundidade);
+        add_current_pos();
 
         if (simbolo[current_pos] == "id")
         {
-            add_current_pos(profundidade);
+            add_current_pos();
         }
         else
         {
@@ -291,11 +289,11 @@ void SintaticoPascalCompiler::procedimento_dc_p(int profundidade)
             procedimento_ERRO(seguidor, seguidor_pai, linha_atual[current_pos], "Erro sintático: identificador esperado na linha " + to_string(linha_atual[current_pos]));
         }
 
-        procedimento_parametros(profundidade);
+        procedimento_parametros();
 
         if (simbolo[current_pos] == "simb_pv")
         {
-            add_current_pos(profundidade);
+            add_current_pos();
         }
         else
         {
@@ -304,8 +302,8 @@ void SintaticoPascalCompiler::procedimento_dc_p(int profundidade)
             vector<string> seguidor_pai = {"simb_begin"};
             procedimento_ERRO(seguidor, seguidor_pai, linha_atual[current_pos], "Erro sintático: “ ; “ esperado na linha " + to_string(linha_atual[current_pos]));
         }
-        procedimento_corpo_p(profundidade);
-        procedimento_dc_p(profundidade);
+        procedimento_corpo_p();
+        procedimento_dc_p();
     }
     else
     {
@@ -314,19 +312,19 @@ void SintaticoPascalCompiler::procedimento_dc_p(int profundidade)
 }
 
 //6. <tipo_var> ::= real | integer
-void SintaticoPascalCompiler::procedimento_tipo_var(int profundidade)
+void SintaticoPascalCompiler::procedimento_tipo_var()
 {
-    //cout << "--- procedimento_tipo_var() ---" << profundidade << endl;
-    profundidade++;
+    //cout << "--- procedimento_tipo_var() ---" <<  << endl;
+    
     if (simbolo[current_pos] == "simb_real")
     {
-        add_current_pos(profundidade);
+        add_current_pos();
 
         return;
     }
     else if (simbolo[current_pos] == "simb_integer")
     {
-        add_current_pos(profundidade);
+        add_current_pos();
 
         return;
     }
@@ -343,13 +341,13 @@ void SintaticoPascalCompiler::procedimento_tipo_var(int profundidade)
 //8. <mais_var> ::= , <variaveis> | λ
 
 //id ,variaveis
-void SintaticoPascalCompiler::procedimento_variaveis(int profundidade)
+void SintaticoPascalCompiler::procedimento_variaveis()
 {
-    //cout << "--- procedimento_variaveis() ---" << profundidade << endl;
-    profundidade++;
+    //cout << "--- procedimento_variaveis() ---" <<  << endl;
+    
     if (simbolo[current_pos] == "id")
     {
-        add_current_pos(profundidade);
+        add_current_pos();
     }
     else
     {
@@ -361,8 +359,8 @@ void SintaticoPascalCompiler::procedimento_variaveis(int profundidade)
 
     if (simbolo[current_pos] == "simb_virg")
     {
-        add_current_pos(profundidade);
-        procedimento_variaveis(profundidade);
+        add_current_pos();
+        procedimento_variaveis();
     }
     else
     {
@@ -371,14 +369,14 @@ void SintaticoPascalCompiler::procedimento_variaveis(int profundidade)
 }
 
 //10- <parametros> ::= ( <lista_par> ) | lambda
-void SintaticoPascalCompiler::procedimento_parametros(int profundidade)
+void SintaticoPascalCompiler::procedimento_parametros()
 {
-    //cout << "--- procedimento_parametros() ---" << profundidade << endl;
-    profundidade++;
+    //cout << "--- procedimento_parametros() ---" <<  << endl;
+    
     if (simbolo[current_pos] == "simb_apar")
     {
-        add_current_pos(profundidade);
-        procedimento_lista_par(profundidade);
+        add_current_pos();
+        procedimento_lista_par();
     }
     else
     {
@@ -386,7 +384,7 @@ void SintaticoPascalCompiler::procedimento_parametros(int profundidade)
     }
     if (simbolo[current_pos] == "simb_fpar")
     {
-        add_current_pos(profundidade);
+        add_current_pos();
         return;
     }
     else
@@ -400,15 +398,15 @@ void SintaticoPascalCompiler::procedimento_parametros(int profundidade)
 
 //11- <lista_par> ::= <variaveis> : <tipo_var> <mais_par>
 //12 -<mais_par> ::= ; <lista_par> | lambda
-void SintaticoPascalCompiler::procedimento_lista_par(int profundidade)
+void SintaticoPascalCompiler::procedimento_lista_par()
 {
-    //cout << "--- procedimento_lista_par() ---" << profundidade << endl;
-    profundidade++;
-    procedimento_variaveis(profundidade);
+    //cout << "--- procedimento_lista_par() ---" <<  << endl;
+    
+    procedimento_variaveis();
 
     if (simbolo[current_pos] == "simb_dp")
     {
-        add_current_pos(profundidade);
+        add_current_pos();
     }
     else
     {
@@ -417,11 +415,11 @@ void SintaticoPascalCompiler::procedimento_lista_par(int profundidade)
         vector<string> seguidor_pai = {"simb_fpar"};
         procedimento_ERRO(seguidor, seguidor_pai, linha_atual[current_pos], "Erro sintático:  “ : “ esperado na linha " + to_string(linha_atual[current_pos]));
     }
-    procedimento_tipo_var(profundidade);
+    procedimento_tipo_var();
     if (simbolo[current_pos] == "simb_pv")
     {
-            add_current_pos(profundidade);
-            procedimento_lista_par(profundidade);
+            add_current_pos();
+            procedimento_lista_par();
     }
     else
     {
@@ -432,15 +430,15 @@ void SintaticoPascalCompiler::procedimento_lista_par(int profundidade)
 
 //13. <corpo_p> ::= <dc_loc> begin <comandos> end ; com
 //14. <dc_loc> ::= <dc_v>
-void SintaticoPascalCompiler::procedimento_corpo_p(int profundidade)
+void SintaticoPascalCompiler::procedimento_corpo_p()
 {
-    //cout << "--- procedimento_corpo_p() ---" << profundidade << endl;
-    profundidade++;
-    procedimento_dc_v(profundidade);
+    //cout << "--- procedimento_corpo_p() ---" <<  << endl;
+    
+    procedimento_dc_v();
 
     if (simbolo[current_pos] == "simb_begin")
     {
-        add_current_pos(profundidade);
+        add_current_pos();
     }
     else
     {
@@ -449,10 +447,10 @@ void SintaticoPascalCompiler::procedimento_corpo_p(int profundidade)
         vector<string> seguidor_pai = {"simb_procedure", "simb_begin"};
         procedimento_ERRO(seguidor, seguidor_pai, linha_atual[current_pos], "Erro sintático:  “ begin “ esperado na linha " + to_string(linha_atual[current_pos]));
     }
-    procedimento_comandos(profundidade);
+    procedimento_comandos();
     if (simbolo[current_pos] == "simb_end")
     {
-        add_current_pos(profundidade);
+        add_current_pos();
     }
     else
     {
@@ -463,7 +461,7 @@ void SintaticoPascalCompiler::procedimento_corpo_p(int profundidade)
     }
     if (simbolo[current_pos] == "simb_pv")
     {
-        add_current_pos(profundidade);
+        add_current_pos();
         return;
     }
     else
@@ -476,14 +474,14 @@ void SintaticoPascalCompiler::procedimento_corpo_p(int profundidade)
 }
 
 //15. <lista_arg> ::= ( <argumentos> ) | λ
-void SintaticoPascalCompiler::procedimento_lista_arg(int profundidade)
+void SintaticoPascalCompiler::procedimento_lista_arg()
 {
-    //cout << "--- procedimento_lista_arg() ---" << profundidade << endl;
-    profundidade++;
+    //cout << "--- procedimento_lista_arg() ---" <<  << endl;
+    
     if (simbolo[current_pos] == "simb_apar")
     {
-        add_current_pos(profundidade);
-        procedimento_argumentos(profundidade);
+        add_current_pos();
+        procedimento_argumentos();
     }
     else
     {
@@ -491,7 +489,7 @@ void SintaticoPascalCompiler::procedimento_lista_arg(int profundidade)
     }
     if (simbolo[current_pos] == "simb_fpar")
     {
-        add_current_pos(profundidade);
+        add_current_pos();
         return;
     }
     else
@@ -505,13 +503,13 @@ void SintaticoPascalCompiler::procedimento_lista_arg(int profundidade)
 
 //16. <argumentos> ::= id <mais_id> com
 //17. <mais_id> ::= ; <argumentos> | λ
-void SintaticoPascalCompiler::procedimento_argumentos(int profundidade)
+void SintaticoPascalCompiler::procedimento_argumentos()
 {
-    //cout << "--- procedimento_argumentos() ---" << profundidade << endl;
-    profundidade++;
+    //cout << "--- procedimento_argumentos() ---" <<  << endl;
+    
     if (simbolo[current_pos] == "id")
     {
-        add_current_pos(profundidade);
+        add_current_pos();
     }
     else
     {
@@ -522,24 +520,24 @@ void SintaticoPascalCompiler::procedimento_argumentos(int profundidade)
     }
     if (simbolo[current_pos] == "simb_pv")
     {
-        add_current_pos(profundidade);
+        add_current_pos();
         //cout << "Função procedimento_argumentos:   " << simbolo[current_pos] << endl;
-        procedimento_argumentos(profundidade);
+        procedimento_argumentos();
     }
     else
     {
-        add_current_pos(profundidade);
+        add_current_pos();
         return;
     }
 }
 
 //18. <pfalsa> ::= else <cmd> | λ
-void SintaticoPascalCompiler::procedimento_pfalsa(int profundidade)
+void SintaticoPascalCompiler::procedimento_pfalsa()
 {
     if (simbolo[current_pos] == "simb_else")
     {
-        add_current_pos(profundidade);
-        procedimento_cmd(profundidade);
+        add_current_pos();
+        procedimento_cmd();
         return;
     }
     else
@@ -549,16 +547,16 @@ void SintaticoPascalCompiler::procedimento_pfalsa(int profundidade)
 }
 
 //19. <comandos> ::= <cmd> ; <comandos> | λ
-void SintaticoPascalCompiler::procedimento_comandos(int profundidade)
+void SintaticoPascalCompiler::procedimento_comandos()
 {
-    //cout << "--- procedimento_comandos() ---" << profundidade << endl;
+    //cout << "--- procedimento_comandos() ---" <<  << endl;
     if (simbolo[current_pos] == "simb_read" || simbolo[current_pos] == "simb_write" || simbolo[current_pos] == "simb_while" || simbolo[current_pos] == "simb_if" || simbolo[current_pos] == "id" || simbolo[current_pos] == "simb_begin" || simbolo[current_pos] == "simb_for")
     {
-        procedimento_cmd(profundidade);
+        procedimento_cmd();
         if (simbolo[current_pos] == "simb_pv")
         {
 
-            add_current_pos(profundidade);
+            add_current_pos();
             
         }
         else
@@ -568,7 +566,7 @@ void SintaticoPascalCompiler::procedimento_comandos(int profundidade)
             vector<string> seguidor_pai = {"simb_end"};
             procedimento_ERRO(seguidor, seguidor_pai, linha_atual[current_pos], "Erro sintático:  “ ; “ esperado na linha " + to_string(linha_atual[current_pos]));
         }
-        procedimento_comandos(profundidade);
+        procedimento_comandos();
     }
     else
     {
@@ -589,16 +587,16 @@ void SintaticoPascalCompiler::procedimento_comandos(int profundidade)
 //                for <variaveis> := numero_int to numero_int do
 //    <cmd_aux’> ::= := <expressao> | <lista_arg>
 
-void SintaticoPascalCompiler::procedimento_cmd(int profundidade)
+void SintaticoPascalCompiler::procedimento_cmd()
 {
-    //cout << "--- procedimento_cmd() ---" << profundidade << endl;
-    profundidade++;
+    //cout << "--- procedimento_cmd() ---" <<  << endl;
+    
     if (simbolo[current_pos] == "simb_read")
     {
-        add_current_pos(profundidade);
+        add_current_pos();
         if (simbolo[current_pos] == "simb_apar")
         {
-            add_current_pos(profundidade);
+            add_current_pos();
             //cout << "Função procedimento_cmd if read:   " << simbolo[current_pos] << endl;
         }
         else
@@ -608,10 +606,10 @@ void SintaticoPascalCompiler::procedimento_cmd(int profundidade)
             vector<string> seguidor_pai = {"simb_pv"};
             procedimento_ERRO(seguidor, seguidor_pai, linha_atual[current_pos], "Erro sintático:  “ ( “ esperado no comando read da linha " + to_string(linha_atual[current_pos]));
         }
-        procedimento_variaveis(profundidade);
+        procedimento_variaveis();
         if (simbolo[current_pos] == "simb_fpar")
         {
-            add_current_pos(profundidade);
+            add_current_pos();
             return;
         }
         else
@@ -625,10 +623,10 @@ void SintaticoPascalCompiler::procedimento_cmd(int profundidade)
 
     else if (simbolo[current_pos] == "simb_write")
     {
-        add_current_pos(profundidade);
+        add_current_pos();
         if (simbolo[current_pos] == "simb_apar")
         {
-            add_current_pos(profundidade);
+            add_current_pos();
             //cout << "Função procedimento_cmd if write:   " << simbolo[current_pos] << endl;
         }
         else
@@ -638,10 +636,10 @@ void SintaticoPascalCompiler::procedimento_cmd(int profundidade)
             vector<string> seguidor_pai = {"simb_pv"};
             procedimento_ERRO(seguidor, seguidor_pai, linha_atual[current_pos], "Erro sintático:  “ ( “ esperado no comando write da linha " + to_string(linha_atual[current_pos]));
         }
-        procedimento_variaveis(profundidade);
+        procedimento_variaveis();
         if (simbolo[current_pos] == "simb_fpar")
         {
-            add_current_pos(profundidade);
+            add_current_pos();
             return;
         }
         else
@@ -655,10 +653,10 @@ void SintaticoPascalCompiler::procedimento_cmd(int profundidade)
 
     else if (simbolo[current_pos] == "simb_while")
     {
-        add_current_pos(profundidade);
+        add_current_pos();
         if (simbolo[current_pos] == "simb_apar")
         {
-            add_current_pos(profundidade);
+            add_current_pos();
             //cout << "Função procedimento_cmd if while:   " << simbolo[current_pos] << endl;
         }
         else
@@ -668,10 +666,10 @@ void SintaticoPascalCompiler::procedimento_cmd(int profundidade)
             vector<string> seguidor_pai = {"simb_pv"};
             procedimento_ERRO(seguidor, seguidor_pai, linha_atual[current_pos], "Erro sintático:  “ ( “ esperado no comando while da linha " + to_string(linha_atual[current_pos]));
         }
-        procedimento_condicao(profundidade);
+        procedimento_condicao();
         if (simbolo[current_pos] == "simb_fpar")
         {
-            add_current_pos(profundidade);
+            add_current_pos();
         }
         else
         {
@@ -682,7 +680,7 @@ void SintaticoPascalCompiler::procedimento_cmd(int profundidade)
         }
         if (simbolo[current_pos] == "simb_do")
         {
-            add_current_pos(profundidade);
+            add_current_pos();
         }
         else
         {
@@ -691,30 +689,30 @@ void SintaticoPascalCompiler::procedimento_cmd(int profundidade)
             vector<string> seguidor_pai = {"simb_pv"};
             procedimento_ERRO(seguidor, seguidor_pai, linha_atual[current_pos], "Erro sintático:  “ do “ esperado no comando while da linha " + to_string(linha_atual[current_pos]));
         }
-        procedimento_cmd(profundidade);  
+        procedimento_cmd();  
     }
 
     else if (simbolo[current_pos] == "id")
     {
-        add_current_pos(profundidade);
+        add_current_pos();
 
         if (simbolo[current_pos] == "simb_atrib")
         {
-            add_current_pos(profundidade);
+            add_current_pos();
             //cout << "Função procedimento_cmd id if:   " << simbolo[current_pos] << endl;
-            procedimento_expressao(profundidade);
+            procedimento_expressao();
             return;
         }
         else if (simbolo[current_pos] == "simb_apar")
         {
-            add_current_pos(profundidade);
+            add_current_pos();
             //cout << "Função procedimento_cmd id else if:   " << simbolo[current_pos] << endl;
-            procedimento_argumentos(profundidade);
-            add_current_pos(profundidade);
+            procedimento_argumentos();
+            add_current_pos();
         
             if (simbolo[current_pos] == "simb_fpar")
             {
-                add_current_pos(profundidade);
+                add_current_pos();
                 return;
             }
             else
@@ -733,11 +731,11 @@ void SintaticoPascalCompiler::procedimento_cmd(int profundidade)
 
     else if (simbolo[current_pos] == "simb_begin")
     {
-        add_current_pos(profundidade);
-        procedimento_comandos(profundidade);
+        add_current_pos();
+        procedimento_comandos();
         if (simbolo[current_pos] == "simb_end")
         {
-            add_current_pos(profundidade);
+            add_current_pos();
             return;
         }
         else
@@ -751,13 +749,13 @@ void SintaticoPascalCompiler::procedimento_cmd(int profundidade)
 
     else if (simbolo[current_pos] == "simb_if")
     {
-        add_current_pos(profundidade);
+        add_current_pos();
         //cout << "Função procedimento_cmd if:   " << simbolo[current_pos] << endl;
-        procedimento_condicao(profundidade);
+        procedimento_condicao();
 
         if (simbolo[current_pos] == "simb_then")
         {
-            add_current_pos(profundidade);
+            add_current_pos();
         }
         else
         {
@@ -767,21 +765,21 @@ void SintaticoPascalCompiler::procedimento_cmd(int profundidade)
             procedimento_ERRO(seguidor, seguidor_pai, linha_atual[current_pos], "Erro sintático:  “ then “ esperado no comando if da linha " + to_string(linha_atual[current_pos]));
         }
             //cout << "Função procedimento_cmd if primeiro if *:   " << simbolo[current_pos] << endl;
-            procedimento_cmd(profundidade);
+            procedimento_cmd();
             //cout << "Função procedimento_cmd if primeiro if +++:   " << simbolo[current_pos] << endl;
-            procedimento_pfalsa(profundidade);
+            procedimento_pfalsa();
     }
 
     else if (simbolo[current_pos] == "simb_for")
     {
-        add_current_pos(profundidade);
+        add_current_pos();
         //cout << "Função procedimento_cmd for:   " << simbolo[current_pos] << endl;
-        procedimento_variaveis(profundidade);
+        procedimento_variaveis();
         //cout << "Função procedimento_cmd for 2:   " << simbolo[current_pos] << endl;
 
         if (simbolo[current_pos] == "simb_atrib")
         {
-            add_current_pos(profundidade);
+            add_current_pos();
         }
         else
         {
@@ -792,7 +790,7 @@ void SintaticoPascalCompiler::procedimento_cmd(int profundidade)
         }
         if (simbolo[current_pos] == "numero_int")
         {
-            add_current_pos(profundidade);
+            add_current_pos();
         }
         else
         {
@@ -803,7 +801,7 @@ void SintaticoPascalCompiler::procedimento_cmd(int profundidade)
         }
         if (simbolo[current_pos] == "simb_to")
         {
-            add_current_pos(profundidade);
+            add_current_pos();
         }
         else
         {
@@ -814,7 +812,7 @@ void SintaticoPascalCompiler::procedimento_cmd(int profundidade)
         }
         if (simbolo[current_pos] == "numero_int")
         {
-            add_current_pos(profundidade);
+            add_current_pos();
         }
         else
         {
@@ -825,7 +823,7 @@ void SintaticoPascalCompiler::procedimento_cmd(int profundidade)
         }
         if (simbolo[current_pos] == "simb_do")
         {
-            add_current_pos(profundidade);
+            add_current_pos();
         }
         else
         {
@@ -834,7 +832,7 @@ void SintaticoPascalCompiler::procedimento_cmd(int profundidade)
             vector<string> seguidor_pai = {"simb_pv"};
             procedimento_ERRO(seguidor, seguidor_pai, linha_atual[current_pos], "Erro sintático:  “ do “ esperado na linha x " + to_string(linha_atual[current_pos]));
         }
-        procedimento_cmd(profundidade);       
+        procedimento_cmd();       
     }
     else
     {
@@ -846,24 +844,24 @@ void SintaticoPascalCompiler::procedimento_cmd(int profundidade)
 }
 
 //23. <expressao> ::= <termo> <outros_termos>
-void SintaticoPascalCompiler::procedimento_expressao(int profundidade)
+void SintaticoPascalCompiler::procedimento_expressao()
 {
-    //cout << "--- procedimento_expressao() ---" << profundidade << endl;
+    //cout << "--- procedimento_expressao() ---" <<  << endl;
     //cout << "Função procedimento_expressao:   " << simbolo[current_pos] << endl;
-    procedimento_termo(profundidade);
-    procedimento_outros_termos(profundidade);
+    procedimento_termo();
+    procedimento_outros_termos();
 }
 
 //21. <condicao> ::= <expressao> <relacao> <expressao>
 //22. <relacao> ::= = | <> | >= | <= | > | <
 //23. <expressao> ::= <termo> <outros_termos>
-void SintaticoPascalCompiler::procedimento_condicao(int profundidade)
+void SintaticoPascalCompiler::procedimento_condicao()
 {
-    //cout << "--- procedimento_condicao() ---" << profundidade << endl;
-    procedimento_expressao(profundidade);
+    //cout << "--- procedimento_condicao() ---" <<  << endl;
+    procedimento_expressao();
     if (simbolo[current_pos] == "simb_igual" || simbolo[current_pos] == "simb_dif" || simbolo[current_pos] == "simb_maior_igual" || simbolo[current_pos] == "simb_menor_igual" || simbolo[current_pos] == "simb_maior" || simbolo[current_pos] == "simb_menor")
     {
-        add_current_pos(profundidade);
+        add_current_pos();
         //cout << "Função procedimento_condicao if:   " << simbolo[current_pos] << endl;
     }
     else
@@ -873,37 +871,37 @@ void SintaticoPascalCompiler::procedimento_condicao(int profundidade)
         vector<string> seguidor_pai = {"simb_fpar", "simb_then"};
         procedimento_ERRO(seguidor, seguidor_pai, linha_atual[current_pos], "Erro sintático:  “ = “, “ <> “ , “ >= “, “ <= “, “ > “ ou “ < “ esperado na linha " + to_string(linha_atual[current_pos]));
     }
-    procedimento_expressao(profundidade);
+    procedimento_expressao();
     return;
 }
 
 //24. <op_un> ::= + | - | λ com
 //27. <termo> ::= <op_un> <fator> <mais_fatores>
-void SintaticoPascalCompiler::procedimento_termo(int profundidade)
+void SintaticoPascalCompiler::procedimento_termo()
 {
-    //cout << "--- procedimento_termo() ---" << profundidade << endl;
+    //cout << "--- procedimento_termo() ---" <<  << endl;
     if (simbolo[current_pos] == "simb_mais" || simbolo[current_pos] == "simb_menos")
     {
 
-        add_current_pos(profundidade);
+        add_current_pos();
         //cout << "Função procedimento_termo if:   " << simbolo[current_pos] << endl;
     }
 
-    procedimento_fator(profundidade);
-    procedimento_mais_fatores(profundidade);
+    procedimento_fator();
+    procedimento_mais_fatores();
 }
 
 //25. <outros_termos> ::= <op_ad><termo><outros_termos> | λ com
 //26. <op_ad> ::= + | -
-void SintaticoPascalCompiler::procedimento_outros_termos(int profundidade)
+void SintaticoPascalCompiler::procedimento_outros_termos()
 {
-    //cout << "--- procedimento_outros_termos() ---" << profundidade << endl;
+    //cout << "--- procedimento_outros_termos() ---" <<  << endl;
     if (simbolo[current_pos] == "simb_mais" || simbolo[current_pos] == "simb_menos")
     {
-        add_current_pos(profundidade);
+        add_current_pos();
         //cout << "Função procedimento_outros_termos if:   " << simbolo[current_pos] << endl;
-        procedimento_termo(profundidade);
-        procedimento_outros_termos(profundidade);
+        procedimento_termo();
+        procedimento_outros_termos();
     }
     else
     {
@@ -913,17 +911,17 @@ void SintaticoPascalCompiler::procedimento_outros_termos(int profundidade)
 
 //28. <mais_fatores> ::= <op_mul> <fator> <mais_fatores> | λ com
 //29. <op_mul> ::= * | /
-void SintaticoPascalCompiler::procedimento_mais_fatores(int profundidade)
+void SintaticoPascalCompiler::procedimento_mais_fatores()
 {
-    //cout << "--- procedimento_mais_fatores() ---" << profundidade << endl;
+    //cout << "--- procedimento_mais_fatores() ---" <<  << endl;
     if (simbolo[current_pos] == "simb_mult" || simbolo[current_pos] == "simb_div")
     {
 
-        add_current_pos(profundidade);
+        add_current_pos();
         //cout << "Função procedimento_mais_fatores if1:   " << simbolo[current_pos] << endl;
-        procedimento_fator(profundidade);
+        procedimento_fator();
         //cout << "Função procedimento_mais_fatores if2:   " << simbolo[current_pos] << endl;
-        procedimento_mais_fatores(profundidade);
+        procedimento_mais_fatores();
     }
     else
     {
@@ -934,25 +932,25 @@ void SintaticoPascalCompiler::procedimento_mais_fatores(int profundidade)
 //30. <fator> ::= id | <numero> | ( <expressao> )
 //31. <numero> ::= numero_int | numero_real
 //23. <expressao> ::= <termo> <outros_termos>
-void SintaticoPascalCompiler::procedimento_fator(int profundidade)
+void SintaticoPascalCompiler::procedimento_fator()
 {
-    //cout << "--- procedimento_fator() ---" << profundidade << endl;
+    //cout << "--- procedimento_fator() ---" <<  << endl;
     if (simbolo[current_pos] == "id" || simbolo[current_pos] == "numero_int" || simbolo[current_pos] == "numero_real")
     {
         //cout << "Função procedimento_fator if:   " << simbolo[current_pos] << endl;
-        add_current_pos(profundidade); //simbolo "id" ou "numero_int" ou "numero_real" é consumido
+        add_current_pos(); //simbolo "id" ou "numero_int" ou "numero_real" é consumido
         return;                        //retorno é realizado
     }
     else if (simbolo[current_pos] == "simb_apar")
     {
 
-        add_current_pos(profundidade);
+        add_current_pos();
         //cout << "Função procedimento_fator else if:   " << simbolo[current_pos] << endl;
-        procedimento_expressao(profundidade);
+        procedimento_expressao();
 
         if (simbolo[current_pos] == "simb_fpar")
         {
-            add_current_pos(profundidade); //simbolo "simb_fpar" é consumido
+            add_current_pos(); //simbolo "simb_fpar" é consumido
             return;                        //retorno é realizado
         }
         else
@@ -1010,7 +1008,7 @@ void SintaticoPascalCompiler::procedimento_ERRO(vector<string> seguidor, vector<
         {
             buffer_erro.push_back(simbolo[current_pos] + ": " + simb_msg[current_pos]);
         }
-        add_current_pos(0);
+        add_current_pos();
         if(first_pos)
             current_pos--;
         vector<string>::iterator t_seg = find(seguidor.begin(), seguidor.end(), simbolo[current_pos]);
