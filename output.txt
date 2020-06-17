@@ -8,7 +8,7 @@ x, id
 ;, simb_pv
 begin, simb_begin
 x, id
-:=, simb_atrib
+:, simb_dp
 1, numero_int
 ;, simb_pv
 while, simb_while
@@ -28,7 +28,6 @@ for, simb_for
 x, id
 :=, simb_atrib
 0, numero_int
-to, simb_to
 10, numero_int
 do, simb_do
 x, id

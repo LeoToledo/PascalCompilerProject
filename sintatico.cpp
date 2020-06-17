@@ -52,14 +52,9 @@ void SintaticoPascalCompiler::procedimento_programa(int profundidade)
     }
     else
     {
-
         cout << "Erro no procedimento_programa, não é program e sim:   " << simbolo[current_pos] << endl;
         vector<string> seguidor = {"id"};
         vector<string> seguidor_pai = {""};
-        if(simbolo[current_pos+1] == "simb_pv")
-        {
-            current_pos--;
-        }
         procedimento_ERRO(seguidor, seguidor_pai, linha_atual[current_pos], "Erro sintático:  “ program “ esperado na linha " + to_string(linha_atual[current_pos]));
     }
     if (simbolo[current_pos] == "id")
@@ -71,10 +66,6 @@ void SintaticoPascalCompiler::procedimento_programa(int profundidade)
         cout << "Erro no procedimento_programa, não é id e sim:   " << simbolo[current_pos] << endl;
         vector<string> seguidor = {"simb_pv"};
         vector<string> seguidor_pai = {""};
-        if(simbolo[current_pos] == "simb_pv")
-        {
-            current_pos--;
-        }
         procedimento_ERRO(seguidor, seguidor_pai, linha_atual[current_pos], "Erro sintático:  identificador esperado na linha " + to_string(linha_atual[current_pos]));
     }
     if (simbolo[current_pos] == "simb_pv")
@@ -199,8 +190,6 @@ void SintaticoPascalCompiler::procedimento_dc_c(int profundidade)
         }
         else
         {
-            if(simbolo[current_pos] == "simb_igual")
-                current_pos--;
             cout << "Erro no procedimento_dc_c, não é id e sim:   " << simbolo[current_pos] << endl;
             vector<string> seguidor = {"simb_igual"};
             vector<string> seguidor_pai = {"simb_var", "simb_procedure", "simb_begin"};
@@ -213,8 +202,6 @@ void SintaticoPascalCompiler::procedimento_dc_c(int profundidade)
         }
         else
         {
-            if(simbolo[current_pos] == "numero_int" || simbolo[current_pos] == "numero_real")
-                current_pos--;
             cout << "Erro no procedimento_dc_c, não é = e sim:   " << simbolo[current_pos] << endl;
             vector<string> seguidor = {"numero_int", "numero_real"};
             vector<string> seguidor_pai = {"simb_var", "simb_procedure", "simb_begin"};
@@ -227,8 +214,6 @@ void SintaticoPascalCompiler::procedimento_dc_c(int profundidade)
         }
         else
         {
-            if(simbolo[current_pos] == "simb_begin" || simbolo[current_pos] == "simb_procedure" || simbolo[current_pos] == "simb_const" || simbolo[current_pos] == "simb_var" )
-                current_pos--;
             cout << "Erro no procedimento_dc_c, não é ; e sim:   " << simbolo[current_pos] << endl;
             vector<string> seguidor = {"simb_const", "simb_var", "simb_procedure", "simb_begin"};
             vector<string> seguidor_pai = {"simb_var", "simb_procedure", "simb_begin"};
@@ -259,8 +244,6 @@ void SintaticoPascalCompiler::procedimento_dc_v(int profundidade)
         }
         else
         {
-            if(simbolo[current_pos] == "simb_real" || simbolo[current_pos] == "simb_integer")
-                current_pos--;
             cout << "Erro no procedimento_dc_v, não é : e sim:   " << simbolo[current_pos] << endl;
             vector<string> seguidor = {"simb_real", "simb_integer"};
             vector<string> seguidor_pai = {"simb_procedure", "simb_begin"};
@@ -273,8 +256,6 @@ void SintaticoPascalCompiler::procedimento_dc_v(int profundidade)
         }
         else
         {
-            if(simbolo[current_pos] == "simb_var" || simbolo[current_pos] == "simb_procedure" || simbolo[current_pos] == "simb_begin")
-                current_pos--;
             cout << "Erro no procedimento_dc_v, não é ; e sim:   " << simbolo[current_pos] << endl;
             vector<string> seguidor = {"simb_var", "simb_procedure", "simb_begin"};
             vector<string> seguidor_pai = {"simb_procedure", "simb_begin"};
@@ -304,8 +285,6 @@ void SintaticoPascalCompiler::procedimento_dc_p(int profundidade)
         }
         else
         {
-            if(simbolo[current_pos] == "simb_apar" || simbolo[current_pos] == "simb_pv")
-                current_pos--;
             cout << "Erro no procedimento_dc_p, não é id e sim:   " << simbolo[current_pos] << endl;
             vector<string> seguidor = {"simb_apar", "simb_pv"};
             vector<string> seguidor_pai = {"simb_begin"};
@@ -320,8 +299,6 @@ void SintaticoPascalCompiler::procedimento_dc_p(int profundidade)
         }
         else
         {
-            if(simbolo[current_pos] == "simb_var" || simbolo[current_pos] == "simb_begin" )
-                current_pos--;
             cout << "Erro no procedimento_dc_p, não é ; e sim:   " << simbolo[current_pos] << endl;
             vector<string> seguidor = {"simb_var", "simb_begin"};
             vector<string> seguidor_pai = {"simb_begin"};
@@ -355,8 +332,6 @@ void SintaticoPascalCompiler::procedimento_tipo_var(int profundidade)
     }
     else
     {
-        if(simbolo[current_pos] == "simb_pv")
-                current_pos--;
         cout << "Erro no procedimento_tipo_var, não é real ou integer e sim:   " << simbolo[current_pos] << endl;
         vector<string> seguidor = {"simb_pv"};
         vector<string> seguidor_pai = {"simb_pv"};
@@ -378,8 +353,6 @@ void SintaticoPascalCompiler::procedimento_variaveis(int profundidade)
     }
     else
     {
-        if(simbolo[current_pos] == "simb_virg" || simbolo[current_pos] == "simb_dp")
-                current_pos--;
         cout << "Erro no procedimento_variaveis, não é id e sim:   " << simbolo[current_pos] << endl;
         vector<string> seguidor = {"simb_virg", "simb_dp"};
         vector<string> seguidor_pai = {"simb_dp"};
@@ -418,8 +391,6 @@ void SintaticoPascalCompiler::procedimento_parametros(int profundidade)
     }
     else
     {
-        if(simbolo[current_pos] == "simb_pv" )
-                current_pos--;
         cout << "Erro no procedimento_parametros, não é ) e sim:   " << simbolo[current_pos] << endl;
         vector<string> seguidor = {"simb_pv"};
         vector<string> seguidor_pai = {"simb_pv"};
@@ -441,8 +412,6 @@ void SintaticoPascalCompiler::procedimento_lista_par(int profundidade)
     }
     else
     {
-        if(simbolo[current_pos] == "simb_real" || simbolo[current_pos] == "simb_integer")
-                current_pos--;
         cout << "Erro no procedimento_lista_par, não é : e sim:   " << simbolo[current_pos] << endl;
         vector<string> seguidor = {"simb_real", "simb_integer"};
         vector<string> seguidor_pai = {"simb_fpar"};
@@ -475,8 +444,6 @@ void SintaticoPascalCompiler::procedimento_corpo_p(int profundidade)
     }
     else
     {
-        if(simbolo[current_pos] == "simb_read" || simbolo[current_pos] == "simb_write" || simbolo[current_pos] == "simb_while" || simbolo[current_pos] == "id" )
-                current_pos--;
         cout << "Erro no procedimento_corpo_p, não é begin e sim:   " << simbolo[current_pos] << endl;
         vector<string> seguidor = {"simb_read", "simb_write", "simb_while", "id", "simb_begin", "simb_if", "simb_for"};
         vector<string> seguidor_pai = {"simb_procedure", "simb_begin"};
@@ -698,10 +665,6 @@ void SintaticoPascalCompiler::procedimento_cmd(int profundidade)
         }
         else
         {
-            if(simbolo[current_pos] == "id")
-            {
-                current_pos--;
-            }
             cout << "Erro no procedimento_cmd, if-while, não há ( e sim:   " << simbolo[current_pos] << endl;
             vector<string> seguidor = {"simb_mais", "simb_menos", "id", "numero_int", "numero_real", "simb_apar"};
             vector<string> seguidor_pai = {"simb_pv"};
@@ -714,10 +677,6 @@ void SintaticoPascalCompiler::procedimento_cmd(int profundidade)
         }
         else
         {
-            if(simbolo[current_pos] == "simb_do")
-            {
-                current_pos--;
-            }
             cout << "Erro no procedimento_cmd, if-while, não há ) e sim:   " << simbolo[current_pos] << endl;
             vector<string> seguidor = {"simb_do"};
             vector<string> seguidor_pai = {"simb_pv"};
@@ -1025,11 +984,20 @@ void SintaticoPascalCompiler::procedimento_ERRO(vector<string> seguidor, vector<
     vector<string>::iterator t_pai = find(seguidor_pai.begin(), seguidor_pai.end(), simbolo[current_pos]);
     vector<string>::iterator t_sinc = find(token_sincronizacao.begin(), token_sincronizacao.end(), simbolo[current_pos]);
 
+    bool first_pos = false;
+
     for (int i = 0; i < seguidor.size(); i++)
     {
         if(simbolo[current_pos] == seguidor[i])
         {
-            current_pos--;
+            if(current_pos > 0)
+            {
+                current_pos--;
+            }
+            else
+            {
+                first_pos = true;
+            }
             break;
         }
     }
@@ -1046,6 +1014,8 @@ void SintaticoPascalCompiler::procedimento_ERRO(vector<string> seguidor, vector<
             buffer_erro.push_back(simbolo[current_pos]);
         }
         add_current_pos(0);
+        if(first_pos)
+            current_pos--;
         vector<string>::iterator t_seg = find(seguidor.begin(), seguidor.end(), simbolo[current_pos]);
         //cout << "current_pos = " << simbolo[current_pos] << endl;
         if (t_seg != seguidor.end()) //token atual e seguidor do token que deu erro
