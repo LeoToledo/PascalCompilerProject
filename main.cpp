@@ -53,30 +53,37 @@ int main(int argc, char const *argv[])
                 if(lexico.buffer_id.size() != size_anterior)
                 {
                     sintatico.simbolo.push_back(lexico.buffer_token[i]);
+                    sintatico.simb_msg.push_back(lexico.buffer_id[i]);
                     sintatico.linha_atual.push_back(lexico.linha_atual);
                     //cout << sintatico.simbolo[i] << " " << sintatico.linha_atual[i] << endl;
                     i++;
                 } 
             }
 
-            //Escrevendo no arquivo
-            ofstream outputFile;
-            outputFile.open("output.txt");
+            //Escrevendo no arquivo de saida do lexico
+            ofstream outputFile_lexico;
+            outputFile_lexico.open("output_lexico.txt");
             for(int i = 0; i < lexico.buffer_id.size(); i++)
             {
-                outputFile << lexico.buffer_id[i] << ", " << lexico.buffer_token[i] << endl;
+                outputFile_lexico << lexico.buffer_id[i] << ", " << lexico.buffer_token[i] << endl;
             }
             
             sintatico.ASD();
             
-            cout << "\n\nVETOR ERRO" << endl;
+            //Escrevendo no arquivo de saida do sintatico
+            ofstream outputFile_sintatico;
+            outputFile_sintatico.open("output_sintatico.txt");
+            cout << "\n\nTXT SAIDA" << endl;
             for (int i = 0; i < sintatico.buffer_erro.size(); i++)
             {
                 cout << sintatico.buffer_erro[i] << endl;
+                outputFile_sintatico << sintatico.buffer_erro[i] << endl;
             }
-            
-
-           
+            if(sintatico.buffer_erro.size() == 0)
+            {
+                cout << "Sucesso !" << endl;
+                outputFile_sintatico << "Sucesso !" << endl;
+            }
         }
     }
 

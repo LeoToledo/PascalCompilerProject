@@ -244,7 +244,7 @@ int LexicoPascalCompiler::number_automaton()
     { 
       if(real_aux.size() > 37)
         {
-          string aux = "ERRO: ""Numero com casas decimais excedentes na linha " + to_string(linha_atual);
+          string aux = """Numero com casas decimais excedentes na linha " + to_string(linha_atual);
           this->buffer_id.push_back(aux);
           this->buffer_token.push_back("Erro_Lexico");
           return -2;
@@ -277,7 +277,7 @@ int LexicoPascalCompiler::number_automaton()
         //Adiciona o erro no buffer_aux
         buffer_aux += programa[indice];
         //Forma a mensagem de erro
-        string aux = "ERRO: ""Numero real " + buffer_aux + " incorreto na linha " + to_string(linha_atual);
+        string aux = """Numero real " + buffer_aux + " incorreto na linha " + to_string(linha_atual);
         //Adiciona a mensagem de erro no buffer de id e de token
         this->buffer_id.push_back(aux);
         this->buffer_token.push_back("Erro_Lexico");
@@ -291,7 +291,7 @@ int LexicoPascalCompiler::number_automaton()
         //Adiciona o erro no buffer_aux
         buffer_aux += programa[indice];
         //Forma a mensagem de erro
-        string aux = "ERRO: ""Numero inteiro " +buffer_aux + " incorreto na linha " + to_string(linha_atual);
+        string aux = """Numero inteiro " +buffer_aux + " incorreto na linha " + to_string(linha_atual);
         //Adiciona a mensagem de erro no buffer de id e de token
         this->buffer_id.push_back(aux);
         this->buffer_token.push_back("Erro_Lexico");
@@ -336,7 +336,7 @@ int LexicoPascalCompiler::indentificador_automaton()
       {
         if(aux_string.size() > 25)
         {
-          string aux = "ERRO: ""Identificador " + aux_string + " com tamanho excedido na linha " + to_string(linha_atual);
+          string aux = """Identificador " + aux_string + " com tamanho excedido na linha " + to_string(linha_atual);
           this->buffer_id.push_back(aux);
           this->buffer_token.push_back("Erro_Lexico");
           return -2;
@@ -369,7 +369,7 @@ int LexicoPascalCompiler::indentificador_automaton()
       //Adiciona o erro no buffer_aux
         aux_string += programa[indice];
         //Forma a mensagem de erro
-        string aux = "ERRO: ""Variavel " +aux_string + " incorreta na linha " + to_string(linha_atual);
+        string aux = """Variavel " +aux_string + " incorreta na linha " + to_string(linha_atual);
         //Adiciona a mensagem de erro no buffer de id e de token
         this->buffer_id.push_back(aux);
         this->buffer_token.push_back("Erro_Lexico");
@@ -399,7 +399,7 @@ int LexicoPascalCompiler::pont_virg_automaton()
     //Adiciona o erro no buffer_aux
         aux_string += programa[indice];
         //Forma a mensagem de erro
-        string aux = "ERRO: Ponto e virgula incorreto na linha " + to_string(linha_atual);
+        string aux = "Ponto e virgula incorreto na linha " + to_string(linha_atual);
         //Adiciona a mensagem de erro no buffer de id e de token
         this->buffer_id.push_back(aux);
         this->buffer_token.push_back("Erro_Lexico");
@@ -417,7 +417,7 @@ int LexicoPascalCompiler::proibido_automaton()
   //Só conta erro solto no caso dos erros específicos não tratados
   if(GetChar(programa[indice-1]) >= 63 && GetChar(programa[indice-1] <= 81))
   { 
-    string temp = "ERRO: Caractere " +aux + " invalido na linha " + to_string(linha_atual);
+    string temp = "Caractere " +aux + " invalido na linha " + to_string(linha_atual);
     buffer_id.push_back(temp);
     buffer_token.push_back("Erro_Lexico");
     indice++;
@@ -516,7 +516,7 @@ int LexicoPascalCompiler::comentario_automaton()
     indice++;
     if(indice > programa.size())
     {
-      string temp = "ERRO: Comentario sem fechar na linha " + to_string(linha_atual);
+      string temp = "Comentario sem fechar na linha " + to_string(linha_atual);
       buffer_id.push_back(temp);
       buffer_token.push_back("Erro_Lexico");
       break;

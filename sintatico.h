@@ -24,6 +24,7 @@ namespace sintatico
             string symbol="";
 
             vector<string> simbolo;
+            vector<string> simb_msg;
             vector<string> buffer_erro;   
             vector<int> linha_atual;
 

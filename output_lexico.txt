@@ -1,5 +1,5 @@
 program, simb_program
-Variavel p@ incorreta na linha 1, Erro_Lexico
+p, id
 ;, simb_pv
 const, simb_const
 x, id
@@ -28,6 +28,7 @@ for, simb_for
 x, id
 :=, simb_atrib
 0, numero_int
+to, simb_to
 10, numero_int
 do, simb_do
 x, id
