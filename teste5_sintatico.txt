@@ -1,6 +1,0 @@
-program teste5;
-var i, a: integer;
-begin
-for i:=1 to 5 do
-read(a,z);
-end.
