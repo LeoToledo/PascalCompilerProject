@@ -1,8 +1,0 @@
-program teste12;
-const c=1;
-var a, b: integer;
-begn;
-read(a);
-b:=c*a+1;
-write(b);
-end.
