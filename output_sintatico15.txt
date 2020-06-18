@@ -1,1 +1,0 @@
-Erro sintático:  “ = “, “ <> “ , “ >= “, “ <= “, “ > “ ou “ < “ esperado na linha 8
