@@ -1,1 +1,0 @@
-Erro sintático:  “ ( “ esperado no comando read da linha 5
