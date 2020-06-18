@@ -1,2 +1,0 @@
-Erro sintático: “var“, “const“ ou “procedure“ esperado na linha 2
-Erro_Lexico: Variavel con@ incorreta na linha 2
