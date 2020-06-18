@@ -1,1 +1,0 @@
-Erro sintático: “var“, “const“ ou “procedure“ esperado na linha 2
