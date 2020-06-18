@@ -1,2 +1,0 @@
-Erro sintático:  “ ; “ esperado na linha 4
-Erro sintático:  “ ; “ esperado na linha 8
